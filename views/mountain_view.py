@@ -1,5 +1,8 @@
+
 import arcade
 from managers.game_manager import GameManager
+from levels.level1 import Level1
+from levels.level2 import Level2
 
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 600
@@ -8,15 +11,32 @@ SCROLL_MARGIN = 200
 class MountainView(arcade.View):
     def __init__(self):
         super().__init__()
+        self.levels = [Level1(), Level2()]
+        self.current_level_index = 0
+        self.level = self.levels[self.current_level_index]
+        self.level.setup()
         self.game_manager = GameManager()
+        self._connect_level_to_manager()
         self.camera_sprites = arcade.Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
 
+    def _connect_level_to_manager(self):
+        self.game_manager.platform_list = self.level.platforms
+        self.game_manager.obstacle_list = self.level.obstacles
+        self.game_manager.dialogue_triggers = self.level.dialogue_triggers
+        # Synchronise les trous du niveau courant
+        if hasattr(self.level, "holes"):
+            self.game_manager.holes = self.level.holes
+        else:
+            self.game_manager.holes = []
+
     def setup(self):
-        self.game_manager.setup()
+        self.game_manager.setup(self.level)
 
     def on_draw(self):
         arcade.start_render()
         self.camera_sprites.use()
+        # Fond du niveau
+        self.level.draw_background()
 
         self.game_manager.platform_list.draw()
         self.game_manager.player.draw()
@@ -82,6 +102,21 @@ class MountainView(arcade.View):
     def on_update(self, delta_time):
         self.game_manager.update()
         self.scroll_to_player()
+
+        # Transition automatique : si le joueur atteint la fin du niveau courant
+        # (exemple : position x > 950)
+        if self.game_manager.player.center_x > 950:
+            if self.current_level_index + 1 < len(self.levels):
+                self.current_level_index += 1
+                self.level = self.levels[self.current_level_index]
+                self.level.setup()
+                self._connect_level_to_manager()
+                self.game_manager.setup(self.level)  # Reset le joueur et la physique
+                # Optionnel : replacer la caméra au début
+                self.camera_sprites.move_to((0, 0))
+            else:
+                # Dernier niveau atteint, retour à l'intro ou écran de fin
+                arcade.schedule(self.back_to_intro, 0.5)
 
         # Mort si tombe sous l'écran
         if self.game_manager.player.center_y < 0 and not self.game_manager.is_game_over:
