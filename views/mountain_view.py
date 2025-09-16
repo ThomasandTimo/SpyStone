@@ -29,6 +29,41 @@ class MountainView(arcade.View):
                 hole.center_x, 20, hole.width, 40, arcade.color.BLACK
             )
 
+        # Dialogue (texte et choix)
+        dm = self.game_manager.dialogue_manager
+        if dm.active:
+            line = dm.get_current_line()
+            arcade.draw_rectangle_filled(
+                self.camera_sprites.position[0]+SCREEN_WIDTH//2, 100,
+                SCREEN_WIDTH-100, 100 + 30*len(dm.choices), (0,0,0,180)
+            )
+            arcade.draw_text(
+                line,
+                self.camera_sprites.position[0]+60, 160 + 30*len(dm.choices),
+                arcade.color.WHITE, 16, width=SCREEN_WIDTH-120
+            )
+            # Affichage des choix si présents
+            if dm.choices:
+                for idx, choice in enumerate(dm.choices):
+                    arcade.draw_text(
+                        f"{idx+1}. {choice}",
+                        self.camera_sprites.position[0]+80,
+                        120 + 30*(len(dm.choices)-idx-1),
+                        arcade.color.LIGHT_GREEN if dm.choice_selected==idx else arcade.color.LIGHT_GRAY,
+                        16
+                    )
+                arcade.draw_text(
+                    "Appuyez sur 1, 2, 3... pour choisir",
+                    self.camera_sprites.position[0]+SCREEN_WIDTH//2, 80,
+                    arcade.color.LIGHT_GRAY, 14, anchor_x="center"
+                )
+            else:
+                arcade.draw_text(
+                    "ESPACE ou flèche bas pour continuer",
+                    self.camera_sprites.position[0]+SCREEN_WIDTH//2, 80,
+                    arcade.color.LIGHT_GRAY, 14, anchor_x="center"
+                )
+
         # UI
         arcade.draw_text(f"Score : {self.game_manager.score}",
                          self.camera_sprites.position[0]+20, SCREEN_HEIGHT-40,
@@ -38,6 +73,7 @@ class MountainView(arcade.View):
                              self.camera_sprites.position[0]+SCREEN_WIDTH/2,
                              SCREEN_HEIGHT/2,
                              arcade.color.RED, 24, anchor_x="center")
+            
     def back_to_intro(self, delta_time):
         arcade.unschedule(self.back_to_intro)
         from views.intro_view import IntroView
@@ -50,7 +86,6 @@ class MountainView(arcade.View):
         # Mort si tombe sous l'écran
         if self.game_manager.player.center_y < 0 and not self.game_manager.is_game_over:
             self.game_manager.is_game_over = True
-            # Schedule la fonction pour 1 seconde plus tard
             arcade.schedule(self.back_to_intro, 1.0)
 
     def scroll_to_player(self):
@@ -65,7 +100,21 @@ class MountainView(arcade.View):
             self.camera_sprites.move_to((player_x - SCREEN_WIDTH + SCROLL_MARGIN, 0), 0.2)
 
     def on_key_press(self, key, modifiers):
-        self.game_manager.handle_key_press(key)
+        dm = self.game_manager.dialogue_manager
+        if dm.active:
+            # Sélection choix si présents
+            if dm.choices:
+                if arcade.key.KEY_1 <= key <= arcade.key.KEY_9:
+                    idx = key - arcade.key.KEY_1
+                    if 0 <= idx < len(dm.choices):
+                        dm.select_choice(idx)
+
+            else:
+                if key in (arcade.key.SPACE, arcade.key.DOWN):
+                    dm.next_line()
+        else:
+            # Contrôles classiques du joueur
+            self.game_manager.handle_key_press(key)
 
     def on_key_release(self, key, modifiers):
         self.game_manager.handle_key_release(key)

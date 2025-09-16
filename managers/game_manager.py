@@ -1,4 +1,5 @@
 import arcade
+from managers.dialogue_manager import DialogueManager
 from models.player import Player
 from models.platform import Platform
 from models.obstacle import FallingObstacle
@@ -18,6 +19,23 @@ class GameManager:
         self.score = 0
         self.physics_engine = None
         self.is_game_over = False
+        self.dialogue_manager = DialogueManager()
+        self.dialogue_triggers = [
+            {"x": 500, "lines": ["Le héros commence son ascension.", "Vous observez attentivement."], "triggered": False},
+            {"x": 1200, "lines": ["Un oiseau vous bloque la route. Que fais-tu ?"],
+             "choices": ["Lui parler gentiment", "Lancer un caillou", "Contourner discrètement"],
+             "on_choice": self.oiseau_callback,
+             "triggered": False}
+        ]
+
+    def oiseau_callback(self, idx, value):
+        # Exemple de callback pour le choix de l'oiseau
+        if idx == 0:
+            self.dialogue_manager.start_dialogue(["L'oiseau te répond poliment."])
+        elif idx == 1:
+            self.dialogue_manager.start_dialogue(["L'oiseau s'envole, vexé !"])
+        elif idx == 2:
+            self.dialogue_manager.start_dialogue(["Tu passes discrètement, l'oiseau ne te voit pas."])
 
 
     def setup(self):
@@ -51,6 +69,12 @@ class GameManager:
         # --- Met à jour physique
         self.physics_engine.update()
         self.player.update()
+
+        # Si dialogue actif, on stoppe obstacles, bonus, QTE
+        if self.dialogue_manager.active:
+            self.check_dialogue_triggers()
+            return
+
         self.obstacle_list.update()
         self.bonus_list.update()
 
@@ -72,6 +96,8 @@ class GameManager:
 
         # --- QTE simple
         self.qte_manager.spawn_qte(self.player.center_x)
+        self.check_dialogue_triggers()
+
 
     def reset_player(self):
         self.player.center_x = 100
@@ -84,6 +110,9 @@ class GameManager:
             self.qte_manager.success()
 
     def handle_key_press(self, key):
+        # Bloque les contrôles de déplacement si un dialogue est actif
+        if self.dialogue_manager.active:
+            return
         if key == arcade.key.RIGHT:
             self.player.move_right()
         elif key == arcade.key.LEFT:
@@ -94,5 +123,26 @@ class GameManager:
             self.handle_qte()
 
     def handle_key_release(self, key):
+        # Bloque les contrôles de déplacement si un dialogue est actif
+        if self.dialogue_manager.active:
+            return
         if key in (arcade.key.RIGHT, arcade.key.LEFT):
             self.player.stop()
+            
+    def check_dialogue_triggers(self):
+        # On ne déclenche pas de dialogue si le joueur saute
+        for trigger in self.dialogue_triggers:
+            if (
+                self.player.center_x >= trigger["x"]
+                and not self.dialogue_manager.active
+                and not trigger["triggered"]
+                and not self.player.is_jumping()
+            ):
+                self.player.stop()
+                self.dialogue_manager.start_dialogue(
+                    trigger["lines"],
+                    choices=trigger.get("choices"),
+                    on_choice=trigger.get("on_choice")
+                )
+                trigger["triggered"] = True
+

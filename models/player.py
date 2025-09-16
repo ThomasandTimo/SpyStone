@@ -23,3 +23,7 @@ class Player(arcade.SpriteCircle):
     def jump(self, physics_engine):
         if physics_engine.can_jump():
             self.change_y = PLAYER_JUMP_SPEED
+    
+    def is_jumping(self):
+        # Considère qu'on saute si la vitesse verticale n'est pas nulle
+        return self.change_y != 0
