@@ -22,12 +22,14 @@ class GameManager:
 
     def setup(self):
         # --- Plateformes
+
         ground = Platform(2000, 40, arcade.color.GRAY, 1000, 20)
         self.platform_list.append(ground)
         self.platform_list.append(Platform(200, 20, arcade.color.BROWN, 400, 150))
         self.platform_list.append(Platform(150, 20, arcade.color.BROWN, 700, 250))
         self.platform_list.append(Platform(180, 20, arcade.color.BROWN, 1100, 300))
         self.platform_list.append(Platform(150, 20, arcade.color.BROWN, 1400, 400))
+        
 
         # --- Trous
         self.holes = [Hole(500, 100), Hole(1300, 150)]
@@ -88,11 +90,14 @@ class GameManager:
             self.player.move_right()
         elif key == arcade.key.LEFT:
             self.player.move_left()
-        elif key == arcade.key.UP:
-            self.player.jump(self.physics_engine)
+        elif key == arcade.key.SPACE:  # touche pour charger le saut
+            self.player.start_jump_charge()
         elif key == arcade.key.E:
             self.handle_qte()
 
     def handle_key_release(self, key):
         if key in (arcade.key.RIGHT, arcade.key.LEFT):
             self.player.stop()
+        elif key == arcade.key.SPACE:  # relâche le saut
+            self.player.release_jump()
+

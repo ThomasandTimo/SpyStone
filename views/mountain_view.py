@@ -18,6 +18,7 @@ class MountainView(arcade.View):
         arcade.start_render()
         self.camera_sprites.use()
 
+        # Dessine tous les sprites
         self.game_manager.platform_list.draw()
         self.game_manager.player.draw()
         self.game_manager.obstacle_list.draw()
@@ -26,18 +27,57 @@ class MountainView(arcade.View):
         # Trous
         for hole in self.game_manager.holes:
             arcade.draw_rectangle_filled(
-                hole.center_x, 20, hole.width, 40, arcade.color.BLACK
+                hole.center_x, 20, hole.width, 40, arcade.color.BLUE
             )
 
-        # UI
-        arcade.draw_text(f"Score : {self.game_manager.score}",
-                         self.camera_sprites.position[0]+20, SCREEN_HEIGHT-40,
-                         arcade.color.BLACK, 16)
+        # UI : Score
+        arcade.draw_text(
+            f"Score : {self.game_manager.score}",
+            self.camera_sprites.position[0] + 20,
+            SCREEN_HEIGHT - 40,
+            arcade.color.BLACK, 16
+        )
+
+        # UI : QTE
         if self.game_manager.qte_manager.active:
-            arcade.draw_text("QTE! Appuyez sur E!",
-                             self.camera_sprites.position[0]+SCREEN_WIDTH/2,
-                             SCREEN_HEIGHT/2,
-                             arcade.color.RED, 24, anchor_x="center")
+            arcade.draw_text(
+                "QTE! Appuyez sur E!",
+                self.camera_sprites.position[0] + SCREEN_WIDTH / 2,
+                SCREEN_HEIGHT / 2,
+                arcade.color.RED, 24, anchor_x="center"
+            )
+
+        # --- Jauge de saut ---
+        player = self.game_manager.player
+        if player.jump_charging:
+            gauge_width = 150
+            gauge_height = 20
+            power_ratio = player.jump_power / player.max_jump_power
+            filled_width = gauge_width * power_ratio
+
+            # Position de la jauge en bas à droite
+            x = self.camera_sprites.position[0] + SCREEN_WIDTH - gauge_width - 20
+            y = 20
+
+            # Fond gris
+            arcade.draw_rectangle_filled(
+                x + gauge_width / 2, y + gauge_height / 2,
+                gauge_width, gauge_height,
+                arcade.color.GRAY
+            )
+            # Partie verte correspondant à la puissance
+            arcade.draw_rectangle_filled(
+                x + filled_width / 2, y + gauge_height / 2,
+                filled_width, gauge_height,
+                arcade.color.GREEN
+            )
+            # Contour noir
+            arcade.draw_rectangle_outline(
+                x + gauge_width / 2, y + gauge_height / 2,
+                gauge_width, gauge_height,
+                arcade.color.BLACK, 2
+            )
+
     def back_to_intro(self, delta_time):
         arcade.unschedule(self.back_to_intro)
         from views.intro_view import IntroView
