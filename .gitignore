@@ -1,0 +1,11 @@
+# Ignore les dossiers de cache Python
+__pycache__/
+*.pyc
+
+# Ignore l'environnement virtuel
+venv/
+
+# Fichiers temporaires de l'éditeur (optionnel)
+*.swp
+*.tmp
+*.log

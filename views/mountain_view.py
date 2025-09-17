@@ -79,13 +79,29 @@ class MountainView(arcade.View):
             power_ratio = player.jump_power / player.max_jump_power
             filled_width = gauge_width * power_ratio
 
-            # Position de la jauge en bas à droite, 10 px plus bas
+            # Position de la jauge en bas à droite, 10 px du bas et du bord
             x = self.camera_sprites.position[0] + SCREEN_WIDTH - gauge_width - 20
-            y = 10  # 10 px plus bas
+            y = 10
 
-            # Fond gris
+            # Fond de la jauge (gris)
             arcade.draw_rectangle_filled(
-                hole.center_x, 20, hole.width, 40, arcade.color.BLACK
+                x + gauge_width / 2, y + gauge_height / 2,
+                gauge_width, gauge_height,
+                arcade.color.GRAY
+            )
+
+            # Partie remplie (vert) correspondant à la puissance du saut
+            arcade.draw_rectangle_filled(
+                x + filled_width / 2, y + gauge_height / 2,
+                filled_width, gauge_height,
+                arcade.color.GREEN
+            )
+
+            # Bordure de la jauge
+            arcade.draw_rectangle_outline(
+                x + gauge_width / 2, y + gauge_height / 2,
+                gauge_width, gauge_height,
+                arcade.color.BLACK, 2
             )
 
         # Dialogue (texte et choix)
