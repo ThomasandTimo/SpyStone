@@ -57,6 +57,16 @@ class Level2(LevelBase):
             {"x": 200, "lines": ["Niveau 2 : la pente se corse !"], "triggered": False},
             {"x": 850, "lines": ["Un précipice... Trouve un moyen de passer !"], "triggered": False}
         ]
+        
+        self.qte_triggers = [
+            {
+                "x": 200,
+                "key": arcade.key.E,
+                "triggered": False,
+                "on_success": lambda: print("QTE réussie !"),
+                "on_fail": lambda: print("QTE échouée...")
+            }
+        ]
 
     def update(self, delta_time):
         # Logique spécifique au niveau (optionnel)
