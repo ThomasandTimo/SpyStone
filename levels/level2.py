@@ -1,9 +1,10 @@
+import os
 import arcade
 from levels.level_base import LevelBase
 
 class Level2(LevelBase):
     def __init__(self):
-        super().__init__("Niveau 2", background_color=arcade.color.LIGHT_BLUE)
+        super().__init__("Niveau 2", background_image=os.path.join("assets/background_glacial_mountains.png"))
 
     def setup(self):
         super().setup()
