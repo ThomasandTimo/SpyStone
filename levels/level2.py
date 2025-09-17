@@ -1,0 +1,51 @@
+import arcade
+from levels.level_base import LevelBase
+
+class Level2(LevelBase):
+    def __init__(self):
+        super().__init__("Niveau 2", background_color=arcade.color.LIGHT_BLUE)
+
+    def setup(self):
+        super().setup()
+        # Sol principal (plateforme continue)
+        ground = arcade.SpriteSolidColor(1000, 40, arcade.color.DARK_BROWN)
+        ground.center_x = 500
+        ground.center_y = 20
+        self.platforms.append(ground)
+
+        # Plateformes supplémentaires
+        self.platforms.append(arcade.SpriteSolidColor(250, 30, arcade.color.DARK_BROWN))
+        self.platforms[-1].center_x = 150
+        self.platforms[-1].center_y = 120
+
+        self.platforms.append(arcade.SpriteSolidColor(200, 30, arcade.color.DARK_BROWN))
+        self.platforms[-1].center_x = 500
+        self.platforms[-1].center_y = 220
+
+        self.platforms.append(arcade.SpriteSolidColor(150, 30, arcade.color.DARK_BROWN))
+        self.platforms[-1].center_x = 800
+        self.platforms[-1].center_y = 320
+
+        # Obstacles : 2 pour le niveau 2
+        from models.obstacle import FallingObstacle
+        for i in range(2):
+            obstacle = FallingObstacle(platforms=self.platforms)
+            obstacle.center_x = 600 + i*100
+            obstacle.center_y = 350 + i*50
+            self.obstacles.append(obstacle)
+
+        # Trous (exemple)
+        from models.hole import Hole
+        self.holes = [
+            Hole(center_x=850, width=120),
+        ]
+
+        # Triggers de dialogue
+        self.dialogue_triggers = [
+            {"x": 200, "lines": ["Niveau 2 : la pente se corse !"], "triggered": False},
+            {"x": 850, "lines": ["Un précipice... Trouve un moyen de passer !"], "triggered": False}
+        ]
+
+    def update(self, delta_time):
+        # Logique spécifique au niveau (optionnel)
+        pass
