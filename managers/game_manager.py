@@ -38,9 +38,10 @@ class GameManager:
         elif idx == 2:
             self.dialogue_manager.start_dialogue(["Tu passes discrètement, l'oiseau ne te voit pas."])
 
-
+        
     def setup(self, level=None):
         # Synchronise le niveau courant
+        
         if level is not None:
             self.level = level
 
@@ -121,8 +122,8 @@ class GameManager:
             self.player.move_right()
         elif key == arcade.key.LEFT:
             self.player.move_left()
-        elif key == arcade.key.UP:
-            self.player.jump(self.physics_engine)
+        elif key == arcade.key.SPACE:  # touche pour charger le saut
+            self.player.start_jump()
         elif key == arcade.key.E:
             self.handle_qte()
 
@@ -132,6 +133,8 @@ class GameManager:
             return
         if key in (arcade.key.RIGHT, arcade.key.LEFT):
             self.player.stop()
+        elif key == arcade.key.SPACE:  # relâche le saut
+            self.player.release_jump()
             
     def check_dialogue_triggers(self):
         # On ne déclenche pas de dialogue si le joueur saute

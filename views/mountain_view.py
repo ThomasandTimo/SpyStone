@@ -3,10 +3,12 @@ import arcade
 from managers.game_manager import GameManager
 from levels.level1 import Level1
 from levels.level2 import Level2
+import time
 
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 600
 SCROLL_MARGIN = 200
+MIN_CHARGE_TIME= 0.2
 
 class MountainView(arcade.View):
     def __init__(self):
@@ -38,16 +40,66 @@ class MountainView(arcade.View):
         # Fond du niveau
         self.level.draw_background()
 
+        # Dessine tous les sprites
         self.game_manager.platform_list.draw()
         self.game_manager.player.draw()
         self.game_manager.obstacle_list.draw()
         self.game_manager.bonus_list.draw()
 
-        # Trous
-        for hole in self.game_manager.holes:
-            arcade.draw_rectangle_filled(
-                hole.center_x, 20, hole.width, 40, arcade.color.BLACK
+        # # Trous
+        # for hole in self.game_manager.holes:
+        #     arcade.draw_rectangle_filled(
+        #         hole.center_x, 20, hole.width, 40, arcade.color.BLUE
+        #     )
+
+        # UI : Score
+        arcade.draw_text(
+            f"Score : {self.game_manager.score}",
+            self.camera_sprites.position[0] + 20,
+            SCREEN_HEIGHT - 40,
+            arcade.color.BLACK, 16
+        )
+
+        # UI : QTE
+        if self.game_manager.qte_manager.active:
+            arcade.draw_text(
+                "QTE! Appuyez sur E!",
+                self.camera_sprites.position[0] + SCREEN_WIDTH / 2,
+                SCREEN_HEIGHT / 2,
+                arcade.color.RED, 24, anchor_x="center"
             )
+
+        # --- Jauge de saut ---
+        player = self.game_manager.player
+        if player.jump_charging and (time.time() - player.jump_press_time) >= MIN_CHARGE_TIME:
+            gauge_width = 150
+            gauge_height = 20
+            power_ratio = player.jump_power / player.max_jump_power
+            filled_width = gauge_width * power_ratio
+
+            # Position de la jauge en bas à droite, 10 px plus bas
+            x = self.camera_sprites.position[0] + SCREEN_WIDTH - gauge_width - 20
+            y = 10  # 10 px plus bas
+
+            # Fond gris
+            arcade.draw_rectangle_filled(
+                x + gauge_width / 2, y + gauge_height / 2,
+                gauge_width, gauge_height,
+                arcade.color.GRAY
+            )
+            # Partie bleu correspondant à la puissance
+            arcade.draw_rectangle_filled(
+                x + filled_width / 2, y + gauge_height / 2,
+                filled_width, gauge_height,
+                arcade.color.BLUE
+            )
+            # Contour noir
+            arcade.draw_rectangle_outline(
+                x + gauge_width / 2, y + gauge_height / 2,
+                gauge_width, gauge_height,
+                arcade.color.BLACK, 2
+            )
+
 
         # Dialogue (texte et choix)
         dm = self.game_manager.dialogue_manager
