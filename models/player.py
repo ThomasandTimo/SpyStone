@@ -1,5 +1,7 @@
+import os
 import math
 import arcade
+from config import ASSETS_PATH
 import time
 
 GRAVITY = 0.5
@@ -11,15 +13,9 @@ class Player(arcade.Sprite):
     """Le caillou joueur avec rotation et saut hybride logarithmique"""
 
     def __init__(self, radius=20):
-        super().__init__()
+        # Charge l'image du sprite 
+        super().__init__(os.path.join(ASSETS_PATH, "rock.gif"), scale=1.5)
         self.radius = radius
-        stone_size = radius * 2
-
-        # Sprite du joueur
-        self.texture = arcade.make_circle_texture(stone_size, arcade.color.DIM_GRAY)
-        self.width = stone_size
-        self.height = stone_size
-
         # Position et vitesse
         self.center_x = 100
         self.center_y = 100

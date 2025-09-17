@@ -7,11 +7,23 @@ class Level2(LevelBase):
 
     def setup(self):
         super().setup()
-        # Sol principal (plateforme continue)
-        ground = arcade.SpriteSolidColor(1000, 40, arcade.color.DARK_BROWN)
-        ground.center_x = 500
-        ground.center_y = 20
-        self.platforms.append(ground)
+
+        # Sol découpé pour laisser un trou centré à x=850 de 120px de large
+        largeur_sol = 1000
+        centre_trou = 850
+        largeur_trou = 120
+        largeur_gauche = centre_trou - largeur_trou // 2  # 790
+        largeur_droite = largeur_sol - (largeur_gauche + largeur_trou)  # 90
+
+        sol_gauche = arcade.SpriteSolidColor(largeur_gauche, 40, arcade.color.DARK_BROWN)
+        sol_gauche.center_x = largeur_gauche // 2
+        sol_gauche.center_y = 20
+        self.platforms.append(sol_gauche)
+
+        sol_droit = arcade.SpriteSolidColor(largeur_droite, 40, arcade.color.DARK_BROWN)
+        sol_droit.center_x = largeur_gauche + largeur_trou + largeur_droite // 2
+        sol_droit.center_y = 20
+        self.platforms.append(sol_droit)
 
         # Plateformes supplémentaires
         self.platforms.append(arcade.SpriteSolidColor(250, 30, arcade.color.DARK_BROWN))
