@@ -15,7 +15,7 @@ class GameManager:
         self.obstacle_list = arcade.SpriteList()
         self.bonus_list = arcade.SpriteList()
         self.holes = []
-        self.qte_manager = QTEManager()
+        self.qte_manager = QTEManager(self.player)
         self.score = 0
         self.physics_engine = None
         self.is_game_over = False
@@ -109,8 +109,8 @@ class GameManager:
 
     def handle_qte(self):
         if self.qte_manager.active:
-            print("QTE réussi !")
-            self.qte_manager.success()
+                self.player.apply_qte_penalty(False)
+                self.qte_manager.success()
 
     def handle_key_press(self, key):
         if self.qte_manager.active:
