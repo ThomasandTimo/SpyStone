@@ -24,7 +24,7 @@ class IntroSceneView(arcade.View):
     def on_show(self):
         try:
             # Load separate images
-            self.background_texture = arcade.load_texture("assets/background_glacial_mountains.png")
+            self.background_texture = arcade.load_texture("assets/explorer_stone_scene.jpg")
             self.explorer_texture = arcade.load_texture("assets/explorer.png")
             self.stone_texture = arcade.load_texture("assets/stone.png")
         except:
