@@ -56,6 +56,10 @@ class Level2(LevelBase):
         # Triggers de dialogue
         self.dialogue_triggers = [
             {"x": 200, "lines": ["Niveau 2 : la pente se corse !"], "triggered": False},
+            {"x": 500, "lines": ["Deux directions s'offrent à vous...", "Laquelle cache la vérité ?"],
+             "choices": ["Chemin 1 (Yéti)", "Chemin 2 (Sûr)"],
+             "on_choice": self.path_choice_callback,
+             "triggered": False},
             {"x": 850, "lines": ["Un précipice... Trouve un moyen de passer !"], "triggered": False}
         ]
         
@@ -68,6 +72,28 @@ class Level2(LevelBase):
                 "on_fail": lambda: print("QTE échouée...")
             }
         ]
+
+    def path_choice_callback(self, idx, value):
+        """Callback pour le choix de chemin"""
+        import random
+        hero_choice = random.randint(0, 1)
+        
+        player_line = ""
+        if idx == hero_choice:
+            player_line = "This way feels right. Let's go."
+        else:
+            player_line = "I trust my own judgment. I'll take the other path."
+
+        if hero_choice == 1:
+            lines = [player_line, "The Hero nods and heads down the safe path."]
+            self.pending_transition = 'safe'
+        else:
+            lines = [player_line, "The Hero grins mischievously and runs toward the Yeti's lair!"]
+            self.pending_transition = 'yeti'
+
+        # Démarre le dialogue combiné; la transition sera déclenchée par MountainView quand le dialogue se termine
+        if hasattr(self, 'dialogue_manager'):
+            self.dialogue_manager.start_dialogue(lines)
 
     def update(self, delta_time):
         # Logique spécifique au niveau (optionnel)
