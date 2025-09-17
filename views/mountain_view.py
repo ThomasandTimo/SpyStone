@@ -7,7 +7,7 @@ from levels.level3 import Level3
 
 import time
 
-SCREEN_WIDTH = 1000
+SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCROLL_MARGIN = 200
 MIN_CHARGE_TIME= 0.2
@@ -111,14 +111,57 @@ class MountainView(arcade.View):
         dm = self.game_manager.dialogue_manager
         if dm.active:
             line = dm.get_current_line()
-            arcade.draw_rectangle_filled(
-                self.camera_sprites.position[0]+SCREEN_WIDTH//2, 100,
-                SCREEN_WIDTH-100, 100 + 30*len(dm.choices), (0,0,0,180)
-            )
+            # Affiche le sprite de dialogue si défini dans le niveau
+            dialogue_box_texture = getattr(self.level, 'dialogue_box_texture', None)
+            dialogue_box_width = SCREEN_WIDTH-200
+            dialogue_box_height = 140 + 30*len(dm.choices)
+            dialogue_box_x = self.camera_sprites.position[0]+SCREEN_WIDTH//2
+            dialogue_box_y = 100
+
+            # Affiche la boîte de dialogue d'abord
+            if dialogue_box_texture:
+                arcade.draw_lrwh_rectangle_textured(
+                    dialogue_box_x - dialogue_box_width//2,
+                    dialogue_box_y - dialogue_box_height//2,
+                    dialogue_box_width,
+                    dialogue_box_height,
+                    dialogue_box_texture
+                )
+            else:
+                arcade.draw_rectangle_filled(
+                    dialogue_box_x, dialogue_box_y,
+                    dialogue_box_width, dialogue_box_height, (0,0,0,180)
+                )
+
+            # Puis le personnage par-dessus (fullbody ou tête)
+            char_fullbody_texture = getattr(self.level, 'dialogue_character_fullbody_texture', None)
+            char_head_texture = getattr(self.level, 'dialogue_character_head_texture', None)
+
+            if char_fullbody_texture:
+                char_x = self.camera_sprites.position[0] + 120
+                char_y = dialogue_box_y + dialogue_box_height//2 - 40
+                char_w = 100
+                char_h = 200
+                arcade.draw_lrwh_rectangle_textured(
+                    char_x - char_w//2, char_y - char_h//2,
+                    char_w, char_h, char_fullbody_texture
+                )
+            elif char_head_texture:
+                char_w = 90
+                char_h = 90
+                char_x = self.camera_sprites.position[0] + 170
+                char_y = dialogue_box_y + dialogue_box_height//2 - 60
+                arcade.draw_lrwh_rectangle_textured(
+                    char_x - char_w//2, char_y - char_h//2,
+                    char_w, char_h, char_head_texture
+                )
+
+            # Texte du dialogue (un peu décalé à droite du personnage)
+            text_x = self.camera_sprites.position[0]+250
             arcade.draw_text(
                 line,
-                self.camera_sprites.position[0]+60, 160 + 30*len(dm.choices),
-                arcade.color.WHITE, 16, width=SCREEN_WIDTH-120
+                text_x, 120 + 30*len(dm.choices),
+                arcade.color.BLACK, 16, width=SCREEN_WIDTH-220
             )
             # Affichage des choix si présents
             if dm.choices:
@@ -138,7 +181,7 @@ class MountainView(arcade.View):
             else:
                 arcade.draw_text(
                     "ESPACE ou flèche bas pour continuer",
-                    self.camera_sprites.position[0]+SCREEN_WIDTH//2, 80,
+                    self.camera_sprites.position[0]+SCREEN_WIDTH//2, 60,
                     arcade.color.LIGHT_GRAY, 14, anchor_x="center"
                 )
 
