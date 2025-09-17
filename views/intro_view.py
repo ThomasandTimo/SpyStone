@@ -8,8 +8,8 @@ class IntroView(arcade.View):
     def on_show(self):
         # Load the mountain background image
         try:
-            self.mountain_texture = arcade.load_texture("assets/mountain_background.png")
-        except:
+            self.mountain_texture = arcade.load_texture("assets/startmenu.png")
+        except:  # noqa: E722
             # Fallback if image not found - use solid color
             arcade.set_background_color(arcade.color.SKY_BLUE)
 
@@ -27,57 +27,19 @@ class IntroView(arcade.View):
                          self.window.height / self.mountain_texture.height)
             )
         
-        # Semi-transparent overlay for better text readability
-        arcade.draw_rectangle_filled(
-            center_x=self.window.width / 2,
-            center_y=self.window.height / 2,
-            width=self.window.width,
-            height=self.window.height,
-            color=(*arcade.color.BLACK, 100)  # Semi-transparent black
-        )
         
-        # Game Title
-        arcade.draw_text(
-            "LE CAILLOU SPECTATEUR",
-            self.window.width / 2, self.window.height - 100,
-            arcade.color.WHITE, 48,
-            anchor_x="center", anchor_y="center",
-            font_name="Arial"
-        )
+
         
-        # Subtitle/Description - Split into separate lines
-        arcade.draw_text(
-            "Un héros grimpe l'Everest...",
-            self.window.width / 2, self.window.height / 2 + 80,
-            arcade.color.WHITE, 20,
-            anchor_x="center", anchor_y="center"
-        )
+
+
         
-        arcade.draw_text(
-            "Mais vous n'êtes qu'un simple caillou.",
-            self.window.width / 2, self.window.height / 2 + 20,
-            arcade.color.WHITE, 20,
-            anchor_x="center", anchor_y="center"
-        )
-        
-        # Menu Options
-        arcade.draw_text(
-            "ESPACE - Commencer l'aventure",
-            self.window.width / 2, self.window.height / 2 - 50,
-            arcade.color.LIGHT_GRAY, 18,
-            anchor_x="center", anchor_y="center"
-        )
-        
-        arcade.draw_text(
-            "ESC - Quitter",
-            self.window.width / 2, self.window.height / 2 - 100,
-            arcade.color.LIGHT_GRAY, 18,
-            anchor_x="center", anchor_y="center"
-        )
+        # Bouton Start
+
+
         
         # Credits
         arcade.draw_text(
-            "Une production GameJam",
+            "A GameJam Production",
             self.window.width / 2, 50,
             arcade.color.GRAY, 14,
             anchor_x="center", anchor_y="center"

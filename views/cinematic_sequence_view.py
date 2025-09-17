@@ -24,18 +24,18 @@ class CinematicSequenceView(arcade.View):
         
         # Set different durations for each frame (in seconds)
         self.frame_durations = [
-            0.2,  # scene_01 - establishing shot
-            0.2,  # scene_02 - quick transition
-            0.2,  # scene_03 - medium pause
-            0.2,  # scene_04 - quick
-            0.2,  # scene_05 - explorer appears, longer pause
-            0.2,  # scene_06 - medium
-            0.2,  # scene_07 - medium
-            0.2,  # scene_08 - stone appears, longer pause
-            0.2,  # scene_09 - medium
-            0.2,  # scene_10 - medium
-            0.2,  # scene_11 - medium
-            0.2,  # scene_12 - medium
+            0.1,  # scene_01 - establishing shot
+            0.1,  # scene_02 - quick transition
+            0.1,  # scene_03 - medium pause
+            0.1,  # scene_04 - quick
+            0.1,  # scene_05 - explorer appears, longer pause
+            0.1,  # scene_06 - medium
+            0.1,  # scene_07 - medium
+            0.1,  # scene_08 - stone appears, longer pause
+            0.1,  # scene_09 - medium
+            0.1,  # scene_10 - medium
+            0.1,  # scene_11 - medium
+            0.1,  # scene_12 - medium
             1.7,  # scene_13 - medium
             0.1,  # scene_14 - final mountain view
             0.1,  # scene_15 - close up, longer pause
