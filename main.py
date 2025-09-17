@@ -2,7 +2,7 @@ import arcade
 from views.intro_view import IntroView
 
 # --- Constantes globales ---
-SCREEN_WIDTH = 1000
+SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Le Caillou Spectateur"
 

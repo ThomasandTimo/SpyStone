@@ -44,6 +44,7 @@ class CinematicSequenceView(arcade.View):
         ]
         
                 # Try to load all frames
+                # Try to load all frames
         for frame_file in frame_files:
             try:
                 texture = arcade.load_texture(f"assets/sequence/{frame_file}")
@@ -156,7 +157,7 @@ class CinematicSequenceView(arcade.View):
                 self.is_playing = False
                 self.current_frame = len(self.scene_frames) - 1 if self.scene_frames else 0
             else:
-                # Continue to scrolling scene
-                from .intro_scene_view import IntroSceneView
-                scrolling_view = IntroSceneView()
-                self.window.show_view(scrolling_view)
+                # Continue to crossroads scene
+                from .crossroads_scene import CrossroadsScene
+                crossroads_view = CrossroadsScene()
+                self.window.show_view(crossroads_view)
