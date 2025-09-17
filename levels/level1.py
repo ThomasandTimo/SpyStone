@@ -43,13 +43,13 @@ class Level1(LevelBase):
 
         # Triggers de dialogue
         self.dialogue_triggers = [
-            {"x": 250, "lines": ["Bienvenue sur le premier niveau !"], "triggered": False},
+            {"x": 230, "lines": ["Bienvenue sur le premier niveau !"], "triggered": False},
             {"x": 650, "lines": ["Attention, un obstacle approche !"], "triggered": False}
         ]
         
         self.qte_triggers = [
             {
-                "x": 600,
+                "x": 200,
                 "key": arcade.key.E,
                 "triggered": False,
                 "on_success": lambda: print("QTE réussie !"),

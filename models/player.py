@@ -5,7 +5,11 @@ import time
 GRAVITY = 0.5
 PLAYER_SPEED = 2
 BASIC_JUMP_SPEED = 12
+<<<<<<< Updated upstream
 MIN_CHARGE_TIME = 0.2  # seuil pour différencier le saut basique et chargé
+=======
+MIN_CHARGE_TIME = 0.2
+>>>>>>> Stashed changes
 
 class Player(arcade.Sprite):
     """Le caillou joueur avec rotation et saut hybride logarithmique"""
@@ -39,10 +43,12 @@ class Player(arcade.Sprite):
 
     # Déplacements horizontaux
     def move_left(self):
-        self.change_x = -PLAYER_SPEED
+        speed = PLAYER_SPEED * (self.qte_penalty_factor if self.qte_penalty else 1)
+        self.change_x = -speed
 
     def move_right(self):
-        self.change_x = PLAYER_SPEED
+        speed = PLAYER_SPEED * (self.qte_penalty_factor if self.qte_penalty else 1)
+        self.change_x = speed
 
     def stop(self):
         self.change_x = 0

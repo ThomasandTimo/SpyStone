@@ -3,6 +3,8 @@ import arcade
 from managers.game_manager import GameManager
 from levels.level1 import Level1
 from levels.level2 import Level2
+from levels.level3 import Level3
+
 import time
 
 SCREEN_WIDTH = 1000
@@ -13,7 +15,7 @@ MIN_CHARGE_TIME= 0.2
 class MountainView(arcade.View):
     def __init__(self):
         super().__init__()
-        self.levels = [Level1(), Level2()]
+        self.levels = [Level3(), Level2(),Level1()]
         self.current_level_index = 0
         self.level = self.levels[self.current_level_index]
         self.level.setup()
@@ -83,23 +85,8 @@ class MountainView(arcade.View):
 
             # Fond gris
             arcade.draw_rectangle_filled(
-                x + gauge_width / 2, y + gauge_height / 2,
-                gauge_width, gauge_height,
-                arcade.color.GRAY
+                hole.center_x, 20, hole.width, 40, arcade.color.BLACK
             )
-            # Partie bleu correspondant à la puissance
-            arcade.draw_rectangle_filled(
-                x + filled_width / 2, y + gauge_height / 2,
-                filled_width, gauge_height,
-                arcade.color.BLUE
-            )
-            # Contour noir
-            arcade.draw_rectangle_outline(
-                x + gauge_width / 2, y + gauge_height / 2,
-                gauge_width, gauge_height,
-                arcade.color.BLACK, 2
-            )
-
 
         # Dialogue (texte et choix)
         dm = self.game_manager.dialogue_manager
@@ -140,17 +127,31 @@ class MountainView(arcade.View):
         arcade.draw_text(f"Score : {self.game_manager.score}",
                          self.camera_sprites.position[0]+20, SCREEN_HEIGHT-40,
                          arcade.color.BLACK, 16)
+       # UI : QTE
         if self.game_manager.qte_manager.active:
-            arcade.draw_text("QTE! Appuyez sur E!",
-                             self.camera_sprites.position[0]+SCREEN_WIDTH/2,
-                             SCREEN_HEIGHT/2,
-                             arcade.color.RED, 24, anchor_x="center")
+            self.game_manager.qte_manager.draw(self.camera_sprites.position[0] + SCREEN_WIDTH / 2)
+
             
     def back_to_intro(self, delta_time):
         arcade.unschedule(self.back_to_intro)
         from views.intro_view import IntroView
         self.window.show_view(IntroView())
+        
+    def show_game_over(self, delta_time):
+        arcade.unschedule(self.show_game_over)
+        
+        # Réinitialiser la caméra à (0, 0) AVANT de changer de vue
+        self.camera_sprites.move_to((0, 0))
+        self.game_manager.player.reset_position()
+        
+        # Attendre un frame pour que la caméra soit mise à jour
+        arcade.schedule(self._transition_to_game_over, 0.01)
 
+    def _transition_to_game_over(self, delta_time):
+        arcade.unschedule(self._transition_to_game_over)
+        from views.game_over_view import GameOverView
+        self.window.show_view(GameOverView())
+        
     def on_update(self, delta_time):
         self.game_manager.update()
         self.scroll_to_player()
@@ -168,12 +169,12 @@ class MountainView(arcade.View):
                 self.camera_sprites.move_to((0, 0))
             else:
                 # Dernier niveau atteint, retour à l'intro ou écran de fin
-                arcade.schedule(self.back_to_intro, 0.5)
+                arcade.schedule(self.show_game_over, 0.5)
 
         # Mort si tombe sous l'écran
         if self.game_manager.player.center_y < 0 and not self.game_manager.is_game_over:
             self.game_manager.is_game_over = True
-            arcade.schedule(self.back_to_intro, 1.0)
+            arcade.schedule(self.show_game_over, 1.0)
 
     def scroll_to_player(self):
         left_boundary = self.camera_sprites.position[0] + SCROLL_MARGIN
