@@ -57,22 +57,6 @@ class MountainView(arcade.View):
                 hole.center_x, 20, hole.width, 40, arcade.color.BLUE
             )
 
-        # UI : Score
-        arcade.draw_text(
-            f"Score : {self.game_manager.score}",
-            self.camera_sprites.position[0] + 20,
-            SCREEN_HEIGHT - 40,
-            arcade.color.BLACK, 16
-        )
-
-        # UI : QTE
-        if self.game_manager.qte_manager.active:
-            arcade.draw_text(
-                "QTE! Appuyez sur E!",
-                self.camera_sprites.position[0] + SCREEN_WIDTH / 2,
-                SCREEN_HEIGHT / 2,
-                arcade.color.RED, 24, anchor_x="center"
-            )
 
         # --- Jauge de saut ---
         player = self.game_manager.player
@@ -185,10 +169,6 @@ class MountainView(arcade.View):
                     arcade.color.LIGHT_GRAY, 14, anchor_x="center"
                 )
 
-        # UI
-        arcade.draw_text(f"Score : {self.game_manager.score}",
-                        self.camera_sprites.position[0]+20, SCREEN_HEIGHT-40,
-                        arcade.color.BLACK, 16)
 
         # QTE
         if self.game_manager.qte_manager.active:
