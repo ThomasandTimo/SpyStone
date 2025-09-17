@@ -4,6 +4,7 @@ from levels.level_base import LevelBase
 class Level2(LevelBase):
     def __init__(self):
         super().__init__("Niveau 2", background_color=arcade.color.LIGHT_BLUE)
+        self.level_end_x = 950
 
     def setup(self):
         super().setup()

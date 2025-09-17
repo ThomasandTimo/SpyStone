@@ -1,6 +1,7 @@
 
 import arcade
 from managers.game_manager import GameManager
+from levels.level0 import Level0
 from levels.level1 import Level1
 from levels.level2 import Level2
 from levels.level3 import Level3
@@ -15,7 +16,7 @@ MIN_CHARGE_TIME= 0.2
 class MountainView(arcade.View):
     def __init__(self):
         super().__init__()
-        self.levels = [Level3(), Level2(),Level1()]
+        self.levels = [Level0(), Level1(), Level2(),Level3()]
         self.current_level_index = 0
         self.level = self.levels[self.current_level_index]
         self.level.setup()
@@ -220,8 +221,8 @@ class MountainView(arcade.View):
         self.scroll_to_player()
 
         # Transition automatique : si le joueur atteint la fin du niveau courant
-        # (exemple : position x > 950)
-        if self.game_manager.player.center_x > 950:
+        # (exemple : position x > level.end_width)
+        if self.game_manager.player.center_x > self.level.level_end_x:
             if self.current_level_index + 1 < len(self.levels):
                 self.current_level_index += 1
                 self.level = self.levels[self.current_level_index]

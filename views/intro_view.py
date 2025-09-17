@@ -16,8 +16,6 @@ class IntroView(arcade.View):
         self.soundtrack = arcade.load_sound("assets/audio/stone_game_soundtrack.mp3")
         self.soundtrack_player = arcade.play_sound(self.soundtrack, volume=0.5, looping=True)
 
-
-
     def on_draw(self):
         self.clear()
         
@@ -31,17 +29,7 @@ class IntroView(arcade.View):
                 scale=max(self.window.width / self.mountain_texture.width,
                          self.window.height / self.mountain_texture.height)
             )
-        
-        
-
-        
-
-
-        
-        # Bouton Start
-
-
-        
+            
         # Credits
         arcade.draw_text(
             "A GameJam Production",
