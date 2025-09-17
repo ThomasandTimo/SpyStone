@@ -1,4 +1,5 @@
 import arcade
+from .mountain_view import MountainView
 
 class IntroSceneView(arcade.View):
     def __init__(self):
@@ -101,6 +102,6 @@ class IntroSceneView(arcade.View):
     def on_key_press(self, key, modifiers):
         if key == arcade.key.SPACE:
             # Return to main menu
-            from .intro_view import IntroView
-            menu_view = IntroView()
-            self.window.show_view(menu_view)
+            mountain_view = MountainView()
+            mountain_view.setup()
+            self.window.show_view(mountain_view)

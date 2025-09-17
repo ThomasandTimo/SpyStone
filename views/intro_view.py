@@ -8,7 +8,7 @@ class IntroView(arcade.View):
     def on_show(self):
         # Load the mountain background image
         try:
-            self.mountain_texture = arcade.load_texture("assets/background_glacial_mountains.png")
+            self.mountain_texture = arcade.load_texture("assets/mountain_background.png")
         except:
             # Fallback if image not found - use solid color
             arcade.set_background_color(arcade.color.SKY_BLUE)
@@ -85,11 +85,10 @@ class IntroView(arcade.View):
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.SPACE:
-            # Use the same import style as your original code
-            from .intro_scene_view import IntroSceneView
-            # Start the game
-            intro_scene = IntroSceneView()
-            self.window.show_view(intro_scene)
+            # Transition to cinematic sequence first
+            from .cinematic_sequence_view import CinematicSequenceView
+            cinematic = CinematicSequenceView()
+            self.window.show_view(cinematic)
         elif key == arcade.key.ESCAPE:
             # Quit the game
             self.window.close()
