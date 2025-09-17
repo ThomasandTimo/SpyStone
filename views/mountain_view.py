@@ -5,7 +5,7 @@ from levels.level1 import Level1
 from levels.level2 import Level2
 import time
 
-SCREEN_WIDTH = 1000
+SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCROLL_MARGIN = 200
 MIN_CHARGE_TIME= 0.2
