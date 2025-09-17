@@ -1,3 +1,4 @@
+import math
 import arcade
 import os 
 from config import ASSETS_PATH
@@ -46,27 +47,25 @@ class LevelBase:
         pass
 
     def draw_background(self):
-        """Dessine le fond en texture couvrant tout l’écran"""
         if self.background_texture:
-            # Obtenir les dimensions de la vue
             left, right, bottom, top = arcade.get_viewport()
             width = right - left
             height = top - bottom
 
-            # Calcul de l’échelle pour remplir l’écran proportionnellement
-            scale_x = width / self.background_texture.width
-            scale_y = height / self.background_texture.height
-            scale = max(scale_x, scale_y) * self.background_zoom  # Remplit sans bande noire
+            tex_w = self.background_texture.width * self.background_zoom
+            tex_h = height  # étirement vertical pour couvrir
 
-            # Centre de l’écran
-            center_x = left + width / 2
-            center_y = bottom + height / 2
+            # Calcule un offset horizontal pour compenser la position flottante
+            offset_x = left % tex_w
+            x_start = left - offset_x
 
-            arcade.draw_scaled_texture_rectangle(
-                center_x=center_x,
-                center_y=center_y,
-                texture=self.background_texture,
-                scale=scale
-            )
+            x = x_start - 150
+            while x < right + tex_w:
+                arcade.draw_lrwh_rectangle_textured(
+                    x, bottom,
+                    tex_w, tex_h,
+                    self.background_texture
+                )
+                x += tex_w
         else:
             arcade.set_background_color(self.background_color)

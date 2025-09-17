@@ -55,22 +55,49 @@ class QTEManager:
 
     def draw(self, camera_x):
         if self.active:
+            screen_center_x = camera_x + 10  # Centré horizontalement
+
+            # Texte 1 : en haut
             arcade.draw_text(
-                f"Vous êtes coincés !!!",
-                camera_x + 200, 450,
-                arcade.color.YELLOW, 20
+                "Vous êtes coincés !!!",
+                screen_center_x, 470,  # Position Y haute
+                arcade.color.BLUE, 25,
+                anchor_x="center"
             )
-            
+
+            # Texte 2 : en dessous
             arcade.draw_text(
-                f"Appuie sur E !",
-                camera_x + 200, 400,
-                arcade.color.YELLOW, 20
+                "Appuie sur E !",
+                screen_center_x, 430,
+                arcade.color.BLUE, 25,
+                anchor_x="center",
             )
-            # Barre de temps restante
+
+            # Barre de progression : centrée et en dessous du texte
             elapsed = time.time() - self.start_time
             remaining_ratio = max(0, 1 - elapsed / self.duration)
+            bar_width = 200
+            bar_height = 20
+            filled_width = bar_width * remaining_ratio
+
+            # Fond de la barre (gris clair)
             arcade.draw_rectangle_filled(
-                camera_x + 250, 370,
-                200 * remaining_ratio, 20,
+                screen_center_x, 390,  # Y plus bas
+                bar_width, bar_height,
+                arcade.color.LIGHT_GRAY
+            )
+
+            # Barre rouge (temps restant)
+            arcade.draw_rectangle_filled(
+                screen_center_x - (bar_width - filled_width) / 2, 390,
+                filled_width, bar_height,
                 arcade.color.RED
             )
+
+            # Bordure noire
+            arcade.draw_rectangle_outline(
+                screen_center_x, 390,
+                bar_width, bar_height,
+                arcade.color.BLACK, 2
+            )
+
