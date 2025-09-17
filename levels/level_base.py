@@ -3,7 +3,7 @@ import os
 from config import ASSETS_PATH
 
 class LevelBase:
-    def __init__(self, name, background_color=arcade.color.SKY_BLUE, background_image=None, background_zoom=1.0, dialogue_box_image=os.path.join(ASSETS_PATH, "ui", "box1.png"), dialogue_character_fullbody_image=None, dialogue_character_head_image=None):
+    def __init__(self, name, background_color=arcade.color.SKY_BLUE, background_image=None, background_zoom=1.0, dialogue_box_image=os.path.join(ASSETS_PATH, "ui", "box1_scaled.png"), dialogue_character_fullbody_image=None, dialogue_character_head_image=None):
         if dialogue_character_fullbody_image is None:
             dialogue_character_fullbody_image = os.path.join(ASSETS_PATH, "characters", "hero_fullbody.png")
         if dialogue_character_head_image is None:
