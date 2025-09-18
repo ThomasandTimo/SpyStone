@@ -13,7 +13,7 @@ class IntroView(arcade.View):
             # Fallback if image not found - use solid color
             arcade.set_background_color(arcade.color.SKY_BLUE)
         
-        self.soundtrack = arcade.load_sound("assets/audio/stone_game_soundtrack.mp3")
+        self.soundtrack = arcade.load_sound("assets/audio/main_theme.mp3")
         self.soundtrack_player = arcade.play_sound(self.soundtrack, volume=0.5, looping=True)
 
 
