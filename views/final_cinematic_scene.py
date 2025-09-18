@@ -80,14 +80,14 @@ class FinalCinematicScene(arcade.View):
         # Show instructions
         if self.is_playing:
             arcade.draw_text(
-                "ESPACE - Passer la séquence finale",
+                    "SPACE - Skip the final cutscene",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 14,
                 anchor_x="center"
             )
         else:
             arcade.draw_text(
-                "ESPACE - Retour au menu",
+                    "SPACE - Return to menu",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 16,
                 anchor_x="center"

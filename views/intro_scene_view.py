@@ -74,7 +74,7 @@ class IntroSceneView(arcade.View):
         
         # Instruction
         arcade.draw_text(
-            "ESPACE - Retour au menu",
+            "SPACE - Back to menu",
             self.window.width // 2, 50,
             arcade.color.WHITE, 16,
             anchor_x="center"

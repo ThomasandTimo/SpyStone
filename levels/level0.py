@@ -40,54 +40,54 @@ class Level0(LevelBase):
 
         # --- Triggers de dialogue ---
         self.dialogue_triggers = [
-            {
-                "x": 0,  # Ignoré pour le tutoriel
-                "lines": [
-                    "Bienvenue, petit caillou !",
-                    "Utilise ← et → pour avancer."
-                ],
-                "triggered": False
-            },
-            {
-                "x": 350,
-                "lines": [
-                    "Bravo ! Tu avances !",
-                    "Appuie sur SPACE pour sauter."
-                ],
-                "triggered": False
-            },
-            {
-                "x": 580,
-                "lines": [
-                    "Excellent ! Saut réussi !",
-                ],
-                "triggered": False
-            },
-             {
-                "x": 850,
-                "lines": [
-                    "Oh non ! un obstacle plus grand !",
-                    "Maintient SPACE pour aller plus haut !"
-                ],
-                "triggered": False
-            },
-            {
-                "x": 1300,
-                "lines": [
-                    "Félicitations !",
-                    "Tu as terminé ce tutoriel !",
-                    "Avance pour accéder au premier niveau !"
-                ],
-                "triggered": False
-            },
-            {
-                "x": 1450,
-                "lines": [
-                    "Début du vrai jeu !"
-                ],
-                "triggered": False,
-                "on_trigger": (lambda: self.on_next_level() if hasattr(self, 'on_next_level') and self.on_next_level else None)
-            }
-        ]
+        {
+            "x": 0,  # Ignored for the tutorial
+            "lines": [
+                "Welcome, little stone!",
+                "Use ← and → to move forward."
+            ],
+            "triggered": False
+        },
+        {
+            "x": 350,
+            "lines": [
+                "Well done! You're moving forward!",
+                "Press SPACE to jump."
+            ],
+            "triggered": False
+        },
+        {
+            "x": 580,
+            "lines": [
+                "Excellent! Jump successful!"
+            ],
+            "triggered": False
+        },
+        {
+            "x": 850,
+            "lines": [
+                "Oh no! A bigger obstacle!",
+                "Hold SPACE to jump higher!"
+            ],
+            "triggered": False
+        },
+        {
+            "x": 1300,
+            "lines": [
+                "Congratulations!",
+                "You have completed this tutorial!",
+                "Move forward to access the first level!"
+            ],
+            "triggered": False
+        },
+        {
+            "x": 1450,
+            "lines": [
+                "Start of the real game!"
+            ],
+            "triggered": False,
+            "on_trigger": (lambda: self.on_next_level() if hasattr(self, 'on_next_level') and self.on_next_level else None)
+        }
+    ]
 
 

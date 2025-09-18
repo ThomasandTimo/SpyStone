@@ -71,7 +71,7 @@ class CrossroadsCompletionScene(arcade.View):
             )
         
         arcade.draw_text(
-            "ESPACE - Continuer l'aventure",
+              "SPACE - Continue the adventure",
             self.window.width // 2, 80,
             arcade.color.WHITE, 16,
             anchor_x="center"

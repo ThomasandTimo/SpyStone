@@ -103,14 +103,14 @@ class CinematicSequenceView(arcade.View):
         # Show instructions
         if self.is_playing:
             arcade.draw_text(
-                "ESPACE - Passer la cinématique",
+                "SPACE - Skip the cutscene",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 14,
                 anchor_x="center"
             )
         else:
             arcade.draw_text(
-                "ESPACE - Continuer",
+                "SPACE - Continue",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 16,
                 anchor_x="center"

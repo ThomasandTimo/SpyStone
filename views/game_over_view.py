@@ -33,7 +33,7 @@ class GameOverView(arcade.View):
 
         # Instruction pour retourner à l'intro ou rejouer
         arcade.draw_text(
-            "Appuyez sur ESPACE pour recommencer",
+            "Press SPACE to restart",
             SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 80,
             arcade.color.LIGHT_GRAY, 24, anchor_x="center"
         )

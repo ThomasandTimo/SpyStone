@@ -6,7 +6,7 @@ from levels.level_base import LevelBase
 
 class Level3(LevelBase):
     def __init__(self):
-        super().__init__("Niveau 3 - La Montagne Venteuse", background_image=os.path.join("assets/background_glacial_mountains_large.png"))
+        super().__init__("Niveau 2 - La Montagne Venteuse", background_image=os.path.join("assets/background_glacial_mountains_large.png"))
         self.level_end_x = 1600
         
     def setup(self):
@@ -160,13 +160,14 @@ class Level3(LevelBase):
             obstacle.center_y = 400 + i*50
             self.obstacles.append(obstacle)
 
-        # === TRIGGERS DE DIALOGUE ===
+      # === DIALOGUE TRIGGERS ===
         self.dialogue_triggers = [
-            {"x": 100, "lines": ["Niveau 3 : La montagne venteuse !", "Attention aux rafales !"], "triggered": False},
-            {"x": 300, "lines": ["Le vent se lève...", "Appuyez sur E quand vous voyez l'indicateur !"], "triggered": False},
-            {"x": 600, "lines": ["Un abri ! Reposez-vous un instant."], "triggered": False},
-            {"x": 900, "lines": ["Presque arrivé !", "Dernière ligne droite !"], "triggered": False}
+            {"x": 100, "lines": ["Level 2: The Windy Mountain!", "Beware of the gusts!"], "triggered": False},
+            {"x": 300, "lines": ["The wind is rising...", "Press E when you see the indicator!"], "triggered": False},
+            {"x": 600, "lines": ["A shelter! Take a moment to rest."], "triggered": False},
+            {"x": 900, "lines": ["Almost there!", "The final stretch!"], "triggered": False}
         ]
+
         
         arcade.schedule(self.force_wind_test, 3.0)
 
@@ -328,7 +329,7 @@ class Level3(LevelBase):
         indicator_x = camera_x + 50
         indicator_y = 100
         arcade.draw_text(
-            f"VENT: {self.wind_direction * self.wind_strength:.1f}",
+            f"WIND: {self.wind_direction * self.wind_strength:.1f}",
             indicator_x, indicator_y,
             arcade.color.RED, 16
         )
@@ -351,7 +352,7 @@ class Level3(LevelBase):
         # Texte d'instruction
         key_name = "E" if self.qte_required_key == arcade.key.E else "?"
         arcade.draw_text(
-            f"APPUYEZ SUR {key_name} !",
+            f"PRESS {key_name} !",
             camera_x + SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 80,
             arcade.color.RED, 24, anchor_x="center"
         )

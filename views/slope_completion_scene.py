@@ -73,14 +73,14 @@ class SlopeCompletionScene(arcade.View):
         
         # Success message
         arcade.draw_text(
-            "Le caillou a gravi la pente !",
+            "The stone has climbed the slope!",
             self.window.width // 2, self.window.height - 100,
             arcade.color.YELLOW, 24,
             anchor_x="center"
         )
         
         arcade.draw_text(
-            "ESPACE - Voir la fin de l'aventure",
+            "SPACE - See the end of the adventure",
             self.window.width // 2, 80,
             arcade.color.WHITE, 16,
             anchor_x="center"

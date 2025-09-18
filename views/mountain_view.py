@@ -23,7 +23,7 @@ class MountainView(arcade.View):
             self.resume_after_yeti()
     def __init__(self):
         super().__init__()
-        self.levels = [Level0(),Level1(),Level3()]
+        self.levels = [Level1(),Level3()]
         self.current_level_index = 0
         self.level = self.levels[self.current_level_index]
         self.level.setup()
