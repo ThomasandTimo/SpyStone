@@ -4,7 +4,7 @@ from views.intro_view import IntroView
 # --- Constantes globales ---
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-SCREEN_TITLE = "Le Caillou Spectateur"
+SCREEN_TITLE = "Rolling Stone"
 
 
 def main():
