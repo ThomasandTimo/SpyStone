@@ -79,14 +79,6 @@ class Level0(LevelBase):
                     "Avance pour accéder au premier niveau !"
                 ],
                 "triggered": False
-            },
-            {
-                "x": 1450,
-                "lines": [
-                    "Début du vrai jeu !"
-                ],
-                "triggered": False,
-                "on_trigger": (lambda: self.on_next_level() if hasattr(self, 'on_next_level') and self.on_next_level else None)
             }
         ]
 

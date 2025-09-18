@@ -130,14 +130,7 @@ class Level1(LevelBase):
             }
         ]
 
-        # Création des sprites
-        for width, height, x, y, color in blocs:
-            bloc_droit = arcade.SpriteSolidColor(width, height, color)
-            bloc_droit.center_x = x
-            bloc_droit.center_y = y
-            self.platforms.append(bloc_droit)
-        
-        # Triggers de dialogue et de transition
+        # Triggers de dialogue
         self.dialogue_triggers = [
             {
                 "x": 0,
@@ -149,7 +142,6 @@ class Level1(LevelBase):
                 "lines": ["These platforms were very helpful,", "allowing me to continue on my path."],
                 "triggered": False
             },
-            {"x": 3300, "lines": [], "triggered": False, "on_trigger": self.crossroads_transition},
             {
                 "x": 3600,
                 "lines": ["Two paths lie ahead...", "Which one holds the truth?"],
@@ -157,16 +149,7 @@ class Level1(LevelBase):
                 "on_choice": self.path_choice_callback,
                 "triggered": False
             },
-            {"x": 3700, "lines": [], "triggered": False, "on_trigger": self.slope_transition},
         ]   
-
-
-    def slope_transition(self):
-        self.pending_transition = 'slope'
-
-    def crossroads_transition(self):
-        # Indique à MountainView de lancer la crossroads scene
-        self.pending_transition = 'crossroads'
 
     def path_choice_callback(self, idx, value):
         """Callback pour le choix de chemin"""

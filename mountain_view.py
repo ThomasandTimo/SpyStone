@@ -6,7 +6,6 @@ from levels.level1 import Level1
 from levels.level2 import Level2
 from levels.level3 import Level3
 import textwrap
-import random
 
 import time
 
@@ -16,14 +15,9 @@ SCROLL_MARGIN = 200
 MIN_CHARGE_TIME= 0.2
 
 class MountainView(arcade.View):
-    def on_show_view(self):
-        # Si on revient du YetiView et une reprise est en attente, effectue la reprise
-        if hasattr(self, "pending_resume_after_yeti") and self.pending_resume_after_yeti:
-            self.pending_resume_after_yeti = False
-            self.resume_after_yeti()
     def __init__(self):
         super().__init__()
-        self.levels = [Level0(),Level1(),Level3()]
+        self.levels = [Level1(), Level1(), Level2(),Level3()]
         self.current_level_index = 0
         self.level = self.levels[self.current_level_index]
         self.level.setup()
@@ -73,10 +67,6 @@ class MountainView(arcade.View):
         self.game_manager.platform_list.draw()
         self.game_manager.obstacle_list.draw()
         self.game_manager.bonus_list.draw()
-
-        # Dessine les obstacles spécifiques au Level 3
-        if hasattr(self.level, 'draw_obstacles'):
-            self.level.draw_obstacles(self.camera_sprites.position[0])
 
         # Dessine le joueur (caillou)
         if self.game_manager.player:
@@ -238,16 +228,9 @@ class MountainView(arcade.View):
                     arcade.color.LIGHT_GRAY, 14, anchor_x="center"
                 )
 
-
         # QTE
         if self.game_manager.qte_manager.active:
             self.game_manager.qte_manager.draw(self.camera_sprites.position[0] + SCREEN_WIDTH / 2)
-        
-        # Effets visuels du Level 3 (vent, QTE)
-        if hasattr(self.level, 'draw_wind_effects'):
-            self.level.draw_wind_effects(self.camera_sprites.position[0])
-        if hasattr(self.level, 'draw_qte_indicator'):
-            self.level.draw_qte_indicator(self.camera_sprites.position[0])
 
             
     def back_to_intro(self, delta_time):
@@ -257,147 +240,55 @@ class MountainView(arcade.View):
         
     def show_game_over(self, delta_time):
         arcade.unschedule(self.show_game_over)
-        # Affiche la scène d'animation de mort du caillou
-        from views.death_animation_scene import DeathAnimationScene
-        self.window.show_view(DeathAnimationScene())
+        
+        # Réinitialiser la caméra à (0, 0) AVANT de changer de vue
+        self.camera_sprites.move_to((0, 0))
+        self.game_manager.player.reset_position()
+        
+        # Attendre un frame pour que la caméra soit mise à jour
+        arcade.schedule(self._transition_to_game_over, 0.01)
+
+    def _transition_to_game_over(self, delta_time):
+        arcade.unschedule(self._transition_to_game_over)
+        from views.game_over_view import GameOverView
+        self.window.show_view(GameOverView())
         
     def on_update(self, delta_time):
         self.game_manager.update()
         self.scroll_to_player()
 
-        # === GESTION DU VENT POUR LEVEL 3 ===
-        if hasattr(self.level, 'get_wind_force'):
-            wind_force = self.level.get_wind_force(self.game_manager.player)
-            self.game_manager.player.wind_force = wind_force
-
-        # === GESTION DES QTE DU LEVEL 3 ===
-        if hasattr(self.level, 'qte_active') and self.level.qte_active:
-            self.level.qte_timer += delta_time
-            if self.level.qte_timer >= self.level.qte_duration:
-                # QTE échoué
-                self.level.qte_active = False
-                self.level.gust_active = False
-                self.level.wind_strength = 0.5  # Vent plus fort après échec
-
-        # === ACTIVATION ALÉATOIRE DES ROCHERS ===
-        if hasattr(self.level, 'activate_random_rock'):
-            if random.random() < 0.01:  # 1% de chance par frame
-                self.level.activate_random_rock()
-
         # Vérifie si un dialogue vient de se terminer et qu'il y a une transition en attente
         if (hasattr(self.level, 'pending_transition') and 
             self.level.pending_transition and 
             not self.game_manager.dialogue_manager.active):
-            if self.level.pending_transition == 'yeti':
+            
+            if self.level.pending_transition == 'safe':
+                self.go_to_next_level()
+            elif self.level.pending_transition == 'yeti':
                 self.go_to_yeti_scene()
-            elif self.level.pending_transition == 'crossroads':
-                self.go_to_crossroads_scene()
-            elif self.level.pending_transition == 'slope':
-                self._pending_resume_level = self.current_level_index + 1
-                self.go_to_slope_scene()
-            elif self.level.pending_transition == 'slope_completion':
-                self.go_to_slope_completion_scene()
+            
             # Nettoie la transition en attente
             self.level.pending_transition = None
-
-        # Si on est sur le dernier niveau et que le joueur dépasse la fin, on lance la slope completion scene
-        if (
-            isinstance(self.level, Level3)
-            and self.game_manager.player.center_x > self.level.level_end_x
-            and not self.game_manager.dialogue_manager.active
-        ):
-            self.go_to_slope_completion_scene()
-
-        # Vérifie la chute du joueur pour le game over (mort du caillou)
-        if self.game_manager.player.center_y < 0 and not self.game_manager.is_game_over:
-            self.game_manager.is_game_over = True
-            arcade.schedule(self.show_game_over, 1.0)
-
-    def go_to_slope_completion_scene(self):
-        from views.slope_completion_scene import SlopeCompletionScene
-        slope_completion_scene = SlopeCompletionScene()
-        self.window.show_view(slope_completion_scene)
-
-        # Vérifie la chute du joueur pour le game over
-        if self.game_manager.player.center_y < 0 and not self.game_manager.is_game_over:
-            self.game_manager.is_game_over = True
-            arcade.schedule(self.show_game_over, 1.0)
-
-    def go_to_crossroads_scene(self):
-        # Sauvegarde la position du joueur et l'état des triggers avant l'animation
-        self._crossroads_player_pos = (
-            self.game_manager.player.center_x,
-            self.game_manager.player.center_y
-        )
-        # Sauvegarde l'état des triggers (clé 'triggered')
-        self._crossroads_triggers_state = [
-            dict(x=trig.get('x'), triggered=trig.get('triggered', False))
-            for trig in getattr(self.level, 'dialogue_triggers', [])
-        ]
-        # Sauvegarde aussi l'état des QTE triggers (clé 'triggered')
-        self._crossroads_qte_state = [
-            dict(x=trig.get('x'), triggered=trig.get('triggered', False))
-            for trig in getattr(self.level, 'qte_triggers', [])
-        ]
-        from views.crossroads_completion_scene import CrossroadsCompletionScene
-        crossroads = CrossroadsCompletionScene(mountain_view=self)
-        self.window.show_view(crossroads)
-
-    def resume_after_crossroads(self):
-        # Replace le joueur à la position sauvegardée avant l'animation
-        self.current_level_index = 0
-        self.level = self.levels[self.current_level_index]
-        self.level.setup()
-        self._connect_level_to_manager()
-        self.game_manager.setup(self.level)
-        self.camera_sprites.move_to((0, 0))
-        # Utilise la position sauvegardée si dispo, sinon fallback
-        pos = getattr(self, '_crossroads_player_pos', (3550, 400))
-        if hasattr(self.game_manager.player, 'reset_position'):
-            self.game_manager.player.reset_position(x=pos[0], y=pos[1])
-        # Restaure l'état des triggers (clé 'triggered')
-        triggers_state = getattr(self, '_crossroads_triggers_state', None)
-        if triggers_state:
-            for trig in self.level.dialogue_triggers:
-                for saved in triggers_state:
-                    if trig.get('x') == saved.get('x'):
-                        trig['triggered'] = saved['triggered']
-        # Restaure aussi l'état des QTE triggers
-        qte_state = getattr(self, '_crossroads_qte_state', None)
-        if qte_state:
-            for trig in getattr(self.level, 'qte_triggers', []):
-                for saved in qte_state:
-                    if trig.get('x') == saved.get('x'):
-                        trig['triggered'] = saved['triggered']
-        # Nettoie les variables temporaires
-        if hasattr(self, '_crossroads_player_pos'):
-            del self._crossroads_player_pos
-        if hasattr(self, '_crossroads_triggers_state'):
-            del self._crossroads_triggers_state
-        if hasattr(self, '_crossroads_qte_state'):
-            del self._crossroads_qte_state
-
-        # Vérifie si le joueur est tombé sous l'écran après restauration
-        if self.game_manager.player.center_y < 0:
-            self.game_manager.is_game_over = True
-            arcade.schedule(self.show_game_over, 1.0)
-            return
 
         # Transition automatique : si le joueur atteint la fin du niveau courant
         # (exemple : position x > level.end_width)
         if self.game_manager.player.center_x > self.level.level_end_x:
-            # Si on termine le Level1 (index 1), on lance la YetiView
-            if self.current_level_index == 1:
-                self._pending_resume_level = self.current_level_index + 1  # On reprendra au Level2
-                self.go_to_yeti_scene()
-            elif self.current_level_index + 1 < len(self.levels):
-                # SAFE ROUTE : on lance la SlopeScene avant Level3
+            if self.current_level_index + 1 < len(self.levels):
                 self.current_level_index += 1
-                self._pending_resume_level = self.current_level_index
-                self.go_to_slope_scene()
+                self.level = self.levels[self.current_level_index]
+                self.level.setup()
+                self._connect_level_to_manager()
+                self.game_manager.setup(self.level)  # Reset le joueur et la physique
+                # Optionnel : replacer la caméra au début
+                self.camera_sprites.move_to((0, 0))
             else:
                 # Dernier niveau atteint, retour à l'intro ou écran de fin
                 arcade.schedule(self.show_game_over, 0.5)
+
+        # Mort si tombe sous l'écran
+        if self.game_manager.player.center_y < 0 and not self.game_manager.is_game_over:
+            self.game_manager.is_game_over = True
+            arcade.schedule(self.show_game_over, 1.0)
 
     def scroll_to_player(self):
         left_boundary = self.camera_sprites.position[0] + SCROLL_MARGIN
@@ -423,17 +314,7 @@ class MountainView(arcade.View):
 
     def go_to_yeti_scene(self):
         from views.yeti_view import YetiView
-        # Passe une référence à MountainView pour pouvoir reprendre après la YetiView
-        yeti_view = YetiView(mountain_view=self)
-        self.window.show_view(yeti_view)
-
-    def resume_after_yeti(self):
-        # Reprend la progression après la YetiView
-        if hasattr(self, '_pending_resume_level'):
-            self.current_level_index = self._pending_resume_level
-            del self._pending_resume_level
-            # Affiche la SlopeScene avant de lancer le niveau suivant
-            self.go_to_slope_scene()
+        self.window.show_view(YetiView())
 
     def on_key_press(self, key, modifiers):
         dm = self.game_manager.dialogue_manager
@@ -451,35 +332,8 @@ class MountainView(arcade.View):
                 if key in (arcade.key.SPACE, arcade.key.DOWN):
                     dm.next_line()
         else:
-            # === GESTION DES QTE DU LEVEL 3 ===
-            if hasattr(self.level, 'handle_qte'):
-                if self.level.handle_qte(key):
-                    return  # QTE réussi, ne pas traiter comme mouvement normal
-            
             # Contrôles classiques du joueur
             self.game_manager.handle_key_press(key)
 
     def on_key_release(self, key, modifiers):
         self.game_manager.handle_key_release(key)
-
-    def go_to_slope_scene(self):
-        from views.slope_scene import SlopeScene
-        slope_scene = SlopeScene()
-        slope_scene.mountain_view = self  # Pour rappel du callback
-        self.window.show_view(slope_scene)
-
-    def resume_after_slope(self):
-        # Appelé par la SlopeScene pour lancer le niveau suivant (Level3)
-        print("Reprise après SlopeScene")
-        # Passe au niveau suivant
-        if self.current_level_index + 1 < len(self.levels):
-            self.current_level_index += 1
-        self.level = self.levels[self.current_level_index]
-        self.level.setup()
-        self._connect_level_to_manager()
-        self.game_manager.setup(self.level)
-        self.camera_sprites.move_to((0, 0))
-        self.game_manager.is_game_over = False
-        # Affiche la MountainView à l'écran
-        if self.window:
-            self.window.show_view(self)

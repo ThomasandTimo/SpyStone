@@ -14,14 +14,14 @@ class Level3(LevelBase):
 
         # === SOL DE DÉBUT ===
         # Plateforme de départ solide
-        start_platform = arcade.SpriteSolidColor(200, 40, arcade.color.DARK_BROWN)
+        start_platform = arcade.SpriteSolidColor(200, 40, arcade.color.BLACK)
         start_platform.center_x = 100
         start_platform.center_y = 20
         self.platforms.append(start_platform)
 
         # === MUR DE GAUCHE ===
         # Grand mur vertical à gauche (comme dans le croquis)
-        left_wall = arcade.SpriteSolidColor(100, 300, arcade.color.GRAY)
+        left_wall = arcade.SpriteSolidColor(100, 300, arcade.color.BLACK)
         left_wall.center_x = 0
         left_wall.center_y = 170
         self.platforms.append(left_wall)
@@ -60,19 +60,19 @@ class Level3(LevelBase):
                     # Ajoute les murs verticaux au début et à la fin du plat
                     if i == plat_start:
                         # Mur gauche
-                        wall_left = arcade.SpriteSolidColor(10, plat_wall_height, arcade.color.DARK_BROWN)
+                        wall_left = arcade.SpriteSolidColor(10, plat_wall_height, arcade.color.BLACK)
                         wall_left.center_x = x - segment_width / 2
                         wall_left.center_y = y + plat_wall_height / 2
                         self.platforms.append(wall_left)
                     if i == plat_start + plat_length - 1:
                         # Mur droit
-                        wall_right = arcade.SpriteSolidColor(10, plat_wall_height, arcade.color.DARK_BROWN)
+                        wall_right = arcade.SpriteSolidColor(10, plat_wall_height, arcade.color.BLACK)
                         wall_right.center_x = x + segment_width / 2
                         wall_right.center_y = y + plat_wall_height / 2
                         self.platforms.append(wall_right)
                     break
 
-            segment = arcade.SpriteSolidColor(segment_width, 15, arcade.color.DARK_BROWN)
+            segment = arcade.SpriteSolidColor(segment_width, 15, arcade.color.BLACK)
             segment.center_x = x
             segment.center_y = y
             self.platforms.append(segment)
@@ -80,14 +80,14 @@ class Level3(LevelBase):
             # Remplissage sous la pente : rectangle du bas de l'écran jusqu'à la plateforme
             fill_height = y - 0  # du bas (y=0) jusqu'à la plateforme
             if fill_height > 0:
-                fill = arcade.SpriteSolidColor(segment_width, int(fill_height), arcade.color.DARK_BROWN)
+                fill = arcade.SpriteSolidColor(segment_width, int(fill_height), arcade.color.BLACK)
                 fill.center_x = x
                 fill.center_y = fill_height / 2
                 self.platforms.append(fill)
 
         # # === PLATEFORME CENTRALE ÉLEVÉE ===
         # # Grande plateforme centrale avec pièges en dessous
-        # central_platform = arcade.SpriteSolidColor(200, 30, arcade.color.DARK_BROWN)
+        # central_platform = arcade.SpriteSolidColor(200, 30, arcade.color.BLACK)
         # central_platform.center_x = 500
         # central_platform.center_y = 550
         # self.platforms.append(central_platform)
@@ -104,12 +104,12 @@ class Level3(LevelBase):
 
         # === SOL DE FIN ===
         # Plateforme de fin avec trou (bas)
-        end_platform_left = arcade.SpriteSolidColor(100, 40, arcade.color.DARK_BROWN)
+        end_platform_left = arcade.SpriteSolidColor(100, 40, arcade.color.BLACK)
         end_platform_left.center_x = 750
         end_platform_left.center_y = 20
         self.platforms.append(end_platform_left)
 
-        end_platform_right = arcade.SpriteSolidColor(100, 40, arcade.color.DARK_BROWN)
+        end_platform_right = arcade.SpriteSolidColor(100, 40, arcade.color.BLACK)
         end_platform_right.center_x = 950
         end_platform_right.center_y = 20
         self.platforms.append(end_platform_right)
