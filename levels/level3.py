@@ -155,6 +155,8 @@ class Level3(LevelBase):
             {"x": 600, "lines": ["Un abri ! Reposez-vous un instant."], "triggered": False},
             {"x": 900, "lines": ["Presque arrivé !", "Dernière ligne droite !"], "triggered": False}
         ]
+        
+        arcade.schedule(self.force_wind_test, 3.0)
 
         # === QTE TRIGGERS ===
         # self.qte_triggers = [
