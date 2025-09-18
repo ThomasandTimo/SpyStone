@@ -71,7 +71,7 @@ class CrossroadsCompletionScene(arcade.View):
             )
         
         arcade.draw_text(
-              "SPACE - Continue the adventure",
+              "ENTER - Continue the adventure",
             self.window.width // 2, 80,
             arcade.color.WHITE, 16,
             anchor_x="center"
@@ -86,7 +86,7 @@ class CrossroadsCompletionScene(arcade.View):
                 self.fade_in_complete = True
 
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.SPACE:
+        if key == arcade.key.ENTER:
             # Retourne à MountainView juste avant le choix
             if self.mountain_view:
                 self.window.show_view(self.mountain_view)

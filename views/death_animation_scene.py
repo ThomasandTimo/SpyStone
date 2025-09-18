@@ -121,7 +121,7 @@ class DeathAnimationScene(arcade.View):
                         self.in_loop_phase = True
 
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.SPACE:
+        if key == arcade.key.ENTER:
             from views.intro_view import IntroView
             menu_view = IntroView()
             self.window.show_view(menu_view)

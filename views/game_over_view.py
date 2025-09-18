@@ -33,13 +33,13 @@ class GameOverView(arcade.View):
 
         # Instruction pour retourner à l'intro ou rejouer
         arcade.draw_text(
-            "Press SPACE to restart",
+            "Press ENTER to restart",
             SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 80,
             arcade.color.LIGHT_GRAY, 24, anchor_x="center"
         )
 
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.SPACE:
+        if key == arcade.key.ENTER:
             # Exemple : revenir à l'intro ou relancer le jeu
             from views.intro_view import IntroView  # adapte si ton fichier est différent
             self.window.show_view(IntroView())

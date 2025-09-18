@@ -95,7 +95,7 @@ class SlopeScene(arcade.View):
             )
         else:
             arcade.draw_text(
-                "SPACE - Start Level 2",
+                "ENTER - Start Level 2",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 16,
                 anchor_x="center"
@@ -141,7 +141,7 @@ class SlopeScene(arcade.View):
                     self.scene_complete = True
 
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.SPACE:
+        if key == arcade.key.ENTER:
             if self.scene_complete:
                 # Callback vers MountainView pour lancer Level3
                 if hasattr(self, 'mountain_view') and self.mountain_view:

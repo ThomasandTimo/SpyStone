@@ -118,7 +118,7 @@ class ExplorerDeathScene(arcade.View):
         self.window.show_view(menu_view)
 
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.SPACE:
+        if key == arcade.key.ENTER:
             if self.is_playing:
                 # Skip to end of sequence
                 self.is_playing = False

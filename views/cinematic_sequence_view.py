@@ -103,14 +103,14 @@ class CinematicSequenceView(arcade.View):
         # Show instructions
         if self.is_playing:
             arcade.draw_text(
-                "SPACE - Skip the cutscene",
+                "ENTER - Skip the cutscene",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 14,
                 anchor_x="center"
             )
         else:
             arcade.draw_text(
-                "SPACE - Continue",
+                "ENTER - Continue",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 16,
                 anchor_x="center"
@@ -152,7 +152,7 @@ class CinematicSequenceView(arcade.View):
                         self.current_frame = len(self.scene_frames) - 1
 
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.SPACE:
+        if key == arcade.key.ENTER:
             if self.is_playing:
                 # Skip to end of sequence
                 self.is_playing = False

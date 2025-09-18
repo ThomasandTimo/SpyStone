@@ -97,7 +97,7 @@ class CrossroadsScene(arcade.View):
             )
         else:
             arcade.draw_text(
-                "SPACE - Start the challenge",
+                "ENTER - Start the challenge",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 16,
                 anchor_x="center"
@@ -133,7 +133,7 @@ class CrossroadsScene(arcade.View):
                     self.scene_complete = True
 
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.SPACE:
+        if key == arcade.key.ENTER:
             if self.scene_complete:
                 # Transition to obstacle course/platformer game
                 self.start_obstacle_course()

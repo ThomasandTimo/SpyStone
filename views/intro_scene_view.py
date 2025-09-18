@@ -74,7 +74,7 @@ class IntroSceneView(arcade.View):
         
         # Instruction
         arcade.draw_text(
-            "SPACE - Back to menu",
+            "ENTER - Back to menu",
             self.window.width // 2, 50,
             arcade.color.WHITE, 16,
             anchor_x="center"
@@ -100,7 +100,7 @@ class IntroSceneView(arcade.View):
                 self.stone_x = -150
 
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.SPACE:
+        if key == arcade.key.ENTER:
             # Return to main menu
             mountain_view = MountainView()
             mountain_view.setup()

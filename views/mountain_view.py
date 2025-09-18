@@ -228,7 +228,7 @@ class MountainView(arcade.View):
                     )
             elif not dm.is_showing_choices():
                 arcade.draw_text(
-                    "SPACE or DOWN ARROW to continue",
+                    "ENTER or DOWN ARROW to continue",
                     self.camera_sprites.position[0]+SCREEN_WIDTH//2, 60,
                     arcade.color.LIGHT_GRAY, 14, anchor_x="center"
                 )
@@ -461,7 +461,7 @@ class MountainView(arcade.View):
                     dm.confirm_choice()
             else:
                 # Avance le dialogue
-                if key in (arcade.key.SPACE, arcade.key.DOWN):
+                if key in (arcade.key.ENTER, arcade.key.DOWN):
                     dm.next_line()
         else:
             # === GESTION DES QTE DU LEVEL 3 ===

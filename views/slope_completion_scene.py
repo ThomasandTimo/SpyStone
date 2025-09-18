@@ -80,7 +80,7 @@ class SlopeCompletionScene(arcade.View):
         )
         
         arcade.draw_text(
-            "SPACE - See the end of the adventure",
+            "ENTER - See the end of the adventure",
             self.window.width // 2, 80,
             arcade.color.WHITE, 16,
             anchor_x="center"
@@ -95,7 +95,7 @@ class SlopeCompletionScene(arcade.View):
                 self.fade_in_complete = True
 
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.SPACE:
+        if key == arcade.key.ENTER:
             # Transition to final cinematic sequence
             from .final_cinematic_scene import FinalCinematicScene
             final_scene = FinalCinematicScene()
