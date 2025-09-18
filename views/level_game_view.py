@@ -87,11 +87,11 @@ class LevelGameView(arcade.View):
             # Check holes
             for hole in self.level.holes:
                 if hole.check_fall(self.player):
-                    self.reset_player()
+                    self.trigger_death_animation()
             
             # Check if player fell off screen
             if self.player.center_y < 0:
-                self.reset_player()
+                self.trigger_death_animation()
             
             # Update camera
             self.scroll_to_player()
@@ -141,6 +141,12 @@ class LevelGameView(arcade.View):
     def on_key_release(self, key, modifiers):
         if key in (arcade.key.RIGHT, arcade.key.LEFT):
             self.player.stop()
+    
+    def trigger_death_animation(self):
+        # Transition to death animation scene
+        from .death_animation_scene import DeathAnimationScene
+        death_scene = DeathAnimationScene()
+        self.window.show_view(death_scene)
     
     def complete_level(self):
         # Return to crossroads scene with both characters together
