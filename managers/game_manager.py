@@ -41,8 +41,9 @@ class GameManager:
         self.physics_engine = arcade.PhysicsEnginePlatformer(
             self.player, self.platform_list, gravity_constant=0.5
         )
+        self.player.reset_position
         self.player.center_x = 100
-        self.player.center_y = 60
+        self.player.center_y = 400
 
     def update(self):
         # --- Met à jour physique

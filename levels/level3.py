@@ -4,8 +4,9 @@ from levels.level_base import LevelBase
 
 class Level3(LevelBase):
     def __init__(self):
-        super().__init__("Niveau 2", background_image=os.path.join("assets/background_glacial_mountains.png"))
-
+        super().__init__("Niveau 2", background_image=os.path.join("assets/background_glacial_mountains_large.png"))
+        self.level_end_x = 950
+        
     def setup(self):
         super().setup()
 
@@ -30,6 +31,8 @@ class Level3(LevelBase):
             {"x": 100, "lines": ["Niveau 2 : La pente commence !"], "triggered": False},
             {"x": 900, "lines": ["Vous atteignez presque le sommet !"], "triggered": False}
         ]
+        
+        
 
         # QTE simple
         self.qte_triggers = [

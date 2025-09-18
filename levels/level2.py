@@ -4,7 +4,8 @@ from levels.level_base import LevelBase
 
 class Level2(LevelBase):
     def __init__(self):
-        super().__init__("Niveau 2", background_image=os.path.join("assets/background_glacial_mountains.png"))
+        super().__init__("Niveau 2", background_image=os.path.join("assets/background_glacial_mountains_large.png"))
+        self.level_end_x = 950
 
     def setup(self):
         super().setup()
@@ -55,22 +56,11 @@ class Level2(LevelBase):
 
         # Triggers de dialogue
         self.dialogue_triggers = [
-            {"x": 200, "lines": ["Niveau 2 : la pente se corse !"], "triggered": False},
-            {"x": 500, "lines": ["Deux directions s'offrent à vous...", "Laquelle cache la vérité ?"],
+            {"x": 100, "lines": ["Niveau 2 : la pente se corse !"], "triggered": False},
+            {"x": 900, "lines": ["Deux directions s'offrent à vous...", "Laquelle cache la vérité ?"],
              "choices": ["Chemin 1 (Yéti)", "Chemin 2 (Sûr)"],
              "on_choice": self.path_choice_callback,
              "triggered": False},
-            {"x": 850, "lines": ["Un précipice... Trouve un moyen de passer !"], "triggered": False}
-        ]
-        
-        self.qte_triggers = [
-            {
-                "x": 200,
-                "key": arcade.key.E,
-                "triggered": False,
-                "on_success": lambda: print("QTE réussie !"),
-                "on_fail": lambda: print("QTE échouée...")
-            }
         ]
 
     def path_choice_callback(self, idx, value):
