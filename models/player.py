@@ -37,6 +37,12 @@ class Player(arcade.Sprite):
         self.qte_penalty = False          # si vrai, le joueur est ralenti
         self.qte_penalty_factor = 0.1     # vitesse réduite à 10%
 
+        # Sons
+        self.roll_sound = arcade.load_sound(os.path.join("assets/audio/rocknroll.mp3"))
+        self.jump_sound = arcade.load_sound(os.path.join("assets/audio/small-rock-break.mp3"))
+        self.last_roll_sound_time = 0  # Anti-spam
+
+
     # -------------------- Déplacements --------------------
     def move_left(self):
         speed = PLAYER_SPEED * (self.qte_penalty_factor if self.qte_penalty else 1)
@@ -83,6 +89,9 @@ class Player(arcade.Sprite):
             self.change_x += applied_power * self.jump_direction[0]
             self.change_y += applied_power * self.jump_direction[1]
 
+        # Jouer le son de saut
+        arcade.play_sound(self.jump_sound)
+
         self.jump_charging = False
         self.jump_press_time = None
 
@@ -93,6 +102,14 @@ class Player(arcade.Sprite):
 
         # Déplacement
         self.center_x += self.change_x
+        
+        # Son de roulement (si en mouvement)
+        if abs(self.change_x) > 0.1:
+            current_time = time.time()
+            if current_time - self.last_roll_sound_time > 0.5:  # une fois toutes les 0.5s
+                arcade.play_sound(self.roll_sound, volume=0.3)
+                self.last_roll_sound_time = current_time
+
         self.center_y += self.change_y
 
         # Rotation en fonction du déplacement horizontal
