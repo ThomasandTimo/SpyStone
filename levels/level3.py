@@ -21,7 +21,7 @@ class Level3(LevelBase):
             x = segment_width / 2 + i * segment_width
             # interpolation linéaire pour avoir une pente régulière
             y = start_y + (end_y - start_y) * (i / num_segments)
-            segment = arcade.SpriteSolidColor(segment_width, 10, arcade.color.DARK_BROWN)
+            segment = arcade.SpriteSolidColor(segment_width, 10, arcade.color.BLACK)
             segment.center_x = x
             segment.center_y = y
             self.platforms.append(segment)

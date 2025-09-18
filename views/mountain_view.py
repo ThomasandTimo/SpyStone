@@ -17,7 +17,7 @@ MIN_CHARGE_TIME= 0.2
 class MountainView(arcade.View):
     def __init__(self):
         super().__init__()
-        self.levels = [Level0(), Level1(), Level2(),Level3()]
+        self.levels = [Level1(), Level1(), Level2(),Level3()]
         self.current_level_index = 0
         self.level = self.levels[self.current_level_index]
         self.level.setup()
@@ -201,7 +201,7 @@ class MountainView(arcade.View):
                             width_est = max(40, len(choice) * 9)
                             arcade.draw_line(choice_x - width_est//2, choice_y - 6, choice_x + width_est//2, choice_y - 6, arcade.color.DARK_BLUE, 2)
                     arcade.draw_text(
-                        "← → pour naviguer, ENTRÉE pour choisir",
+                        "← → to navigate, ENTER to select",
                         center_x, 50,
                         arcade.color.DARK_SLATE_GRAY, 14, anchor_x="center"
                     )
@@ -217,17 +217,16 @@ class MountainView(arcade.View):
                             16
                         )
                     arcade.draw_text(
-                        "← → pour naviguer, ENTRÉE pour choisir",
+                        "← → to navigate, ENTER to select",
                         self.camera_sprites.position[0]+SCREEN_WIDTH//2, 50,
                         arcade.color.LIGHT_GRAY, 14, anchor_x="center"
                     )
             elif not dm.is_showing_choices():
                 arcade.draw_text(
-                    "ESPACE ou flèche bas pour continuer",
+                    "SPACE or DOWN ARROW to continue",
                     self.camera_sprites.position[0]+SCREEN_WIDTH//2, 60,
                     arcade.color.LIGHT_GRAY, 14, anchor_x="center"
                 )
-
 
         # QTE
         if self.game_manager.qte_manager.active:

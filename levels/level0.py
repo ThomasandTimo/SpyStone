@@ -11,19 +11,21 @@ class Level0(LevelBase):
         super().setup()
         
         # --- Sol ---
-        sol = arcade.SpriteSolidColor(2300, 40, arcade.color.DARK_SLATE_GRAY)
+        sol = arcade.SpriteSolidColor(2300, 40, arcade.color.BLACK)
         sol.center_x = 800
         sol.center_y = 20
         self.platforms.append(sol)
         
-        # --- Sol ---
-        sol = arcade.SpriteSolidColor(200, 200, arcade.color.DARK_SLATE_GRAY)
+          # --- Plateforme carrée (largeur: 200, hauteur: 200) ---
+        sol = arcade.Sprite(os.path.join(ASSETS_PATH, "floor.png"))
+        sol.scale_x = 200 / sol.texture.width
+        sol.scale_y = 200 / sol.texture.height
         sol.center_x = 600
         sol.center_y = 20
         self.platforms.append(sol)
         
-        # --- Sol ---
-        sol = arcade.SpriteSolidColor(80, 650, arcade.color.DARK_SLATE_GRAY)
+        # --- Mur vertical (largeur: 80, hauteur: 650) ---
+        sol = arcade.SpriteSolidColor(80, 650, arcade.color.BLACK)
         sol.center_x = 1000
         sol.center_y = 20
         self.platforms.append(sol)
