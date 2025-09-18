@@ -36,6 +36,9 @@ class Player(arcade.Sprite):
         # --- Gestion QTE ---
         self.qte_penalty = False          # si vrai, le joueur est ralenti
         self.qte_penalty_factor = 0.1     # vitesse réduite à 10%
+        
+        # --- Gestion Vent ---
+        self.wind_force = 0               # force du vent appliquée au joueur
 
     # -------------------- Déplacements --------------------
     def move_left(self):
@@ -90,6 +93,9 @@ class Player(arcade.Sprite):
     def update(self):
         # Appliquer gravité
         self.change_y -= GRAVITY
+        
+        # Appliquer la force du vent
+        self.change_x += self.wind_force
 
         # Déplacement
         self.center_x += self.change_x

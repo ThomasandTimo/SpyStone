@@ -6,6 +6,7 @@ from levels.level1 import Level1
 from levels.level2 import Level2
 from levels.level3 import Level3
 import textwrap
+import random
 
 import time
 
@@ -67,6 +68,10 @@ class MountainView(arcade.View):
         self.game_manager.platform_list.draw()
         self.game_manager.obstacle_list.draw()
         self.game_manager.bonus_list.draw()
+
+        # Dessine les obstacles spécifiques au Level 3
+        if hasattr(self.level, 'draw_obstacles'):
+            self.level.draw_obstacles(self.camera_sprites.position[0])
 
         # Dessine le joueur (caillou)
         if self.game_manager.player:
@@ -232,6 +237,12 @@ class MountainView(arcade.View):
         # QTE
         if self.game_manager.qte_manager.active:
             self.game_manager.qte_manager.draw(self.camera_sprites.position[0] + SCREEN_WIDTH / 2)
+        
+        # Effets visuels du Level 3 (vent, QTE)
+        if hasattr(self.level, 'draw_wind_effects'):
+            self.level.draw_wind_effects(self.camera_sprites.position[0])
+        if hasattr(self.level, 'draw_qte_indicator'):
+            self.level.draw_qte_indicator(self.camera_sprites.position[0])
 
             
     def back_to_intro(self, delta_time):
@@ -257,6 +268,25 @@ class MountainView(arcade.View):
     def on_update(self, delta_time):
         self.game_manager.update()
         self.scroll_to_player()
+
+        # === GESTION DU VENT POUR LEVEL 3 ===
+        if hasattr(self.level, 'get_wind_force'):
+            wind_force = self.level.get_wind_force(self.game_manager.player)
+            self.game_manager.player.wind_force = wind_force
+
+        # === GESTION DES QTE DU LEVEL 3 ===
+        if hasattr(self.level, 'qte_active') and self.level.qte_active:
+            self.level.qte_timer += delta_time
+            if self.level.qte_timer >= self.level.qte_duration:
+                # QTE échoué
+                self.level.qte_active = False
+                self.level.gust_active = False
+                self.level.wind_strength = 0.5  # Vent plus fort après échec
+
+        # === ACTIVATION ALÉATOIRE DES ROCHERS ===
+        if hasattr(self.level, 'activate_random_rock'):
+            if random.random() < 0.01:  # 1% de chance par frame
+                self.level.activate_random_rock()
 
         # Vérifie si un dialogue vient de se terminer et qu'il y a une transition en attente
         if (hasattr(self.level, 'pending_transition') and 
@@ -333,6 +363,11 @@ class MountainView(arcade.View):
                 if key in (arcade.key.SPACE, arcade.key.DOWN):
                     dm.next_line()
         else:
+            # === GESTION DES QTE DU LEVEL 3 ===
+            if hasattr(self.level, 'handle_qte'):
+                if self.level.handle_qte(key):
+                    return  # QTE réussi, ne pas traiter comme mouvement normal
+            
             # Contrôles classiques du joueur
             self.game_manager.handle_key_press(key)
 
