@@ -71,14 +71,6 @@ class CrossroadsCompletionScene(arcade.View):
                 fade_overlay
             )
         
-        # Success message
-        arcade.draw_text(
-            "Le caillou a rejoint l'explorateur !",
-            self.window.width // 2, self.window.height - 100,
-            arcade.color.YELLOW, 24,
-            anchor_x="center"
-        )
-        
         arcade.draw_text(
             "ESPACE - Continuer l'aventure",
             self.window.width // 2, 80,

@@ -86,13 +86,6 @@ class FinalCinematicScene(arcade.View):
                 anchor_x="center"
             )
         else:
-            # End of sequence
-            arcade.draw_text(
-                "Fin de l'aventure",
-                self.window.width // 2, self.window.height // 2 + 100,
-                arcade.color.YELLOW, 32,
-                anchor_x="center"
-            )
             arcade.draw_text(
                 "ESPACE - Retour au menu",
                 self.window.width // 2, 50,
