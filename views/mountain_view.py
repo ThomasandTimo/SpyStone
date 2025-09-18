@@ -308,7 +308,8 @@ class MountainView(arcade.View):
 
     def on_key_press(self, key, modifiers):
         dm = self.game_manager.dialogue_manager
-        if dm.active:
+        # Si dialogue bloquant, on bloque les contrôles joueur
+        if dm.is_blocking():
             # Navigation et validation des choix au clavier
             if dm.is_showing_choices():
                 if key == arcade.key.LEFT:
@@ -322,7 +323,7 @@ class MountainView(arcade.View):
                 if key in (arcade.key.SPACE, arcade.key.DOWN):
                     dm.next_line()
         else:
-            # Contrôles classiques du joueur
+            # Contrôles classiques du joueur (toujours actifs si non bloquant)
             self.game_manager.handle_key_press(key)
 
     def on_key_release(self, key, modifiers):

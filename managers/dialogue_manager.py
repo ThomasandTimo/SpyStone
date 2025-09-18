@@ -13,9 +13,13 @@ class DialogueManager:
         self.cursor_position = 0
         self._showing_choices = False
         self.game_manager = None  # Référence au game manager pour les callbacks
+        self.blocking = True      # Si False, dialogue non bloquant
+        self.auto_duration = None # Durée d'affichage automatique (en secondes)
+        self._auto_close_time = None
 
-    def start_dialogue(self, dialogues, choices=None, on_choice=None):
-        """Lancer un nouveau dialogue. on_choice(index, value) sera appelé si choix."""
+    def start_dialogue(self, dialogues, choices=None, on_choice=None, blocking=True, auto_duration=None):
+        """Lancer un nouveau dialogue. on_choice(index, value) sera appelé si choix. Si blocking=False, le jeu continue normalement. auto_duration: durée d'affichage auto (s) pour non bloquant."""
+        import time
         self.dialogues = dialogues
         self.current_index = 0
         self.choices = choices or []
@@ -24,6 +28,19 @@ class DialogueManager:
         self.on_choice = on_choice
         self.cursor_position = 0
         self._showing_choices = False
+        self.blocking = blocking
+        self.auto_duration = auto_duration
+        if auto_duration is not None and not blocking:
+            self._auto_close_time = time.time() + auto_duration
+        else:
+            self._auto_close_time = None
+    def update(self):
+        """À appeler à chaque frame pour gérer la fermeture auto des dialogues non bloquants."""
+        import time
+        if self.active and not self.blocking and self.auto_duration is not None:
+            if self._auto_close_time is not None and time.time() >= self._auto_close_time:
+                self.active = False
+                self._auto_close_time = None
 
     def next_line(self):
         """Passe à la ligne suivante ou termine le dialogue"""
@@ -84,6 +101,10 @@ class DialogueManager:
     def is_finished(self):
         """Retourne True si le dialogue est terminé"""
         return not self.active
+
+    def is_blocking(self):
+        """Retourne True si le dialogue est bloquant (le jeu doit s'arrêter)"""
+        return self.active and self.blocking
 
     def is_showing_choices(self):
         return self._showing_choices

@@ -49,8 +49,11 @@ class GameManager:
         self.physics_engine.update()
         self.player.update()
 
-        # Si dialogue actif, on stoppe obstacles, bonus, QTE
-        if self.dialogue_manager.active:
+        # Met à jour le dialogue manager (pour auto-fermeture)
+        self.dialogue_manager.update()
+
+        # Si dialogue bloquant, on stoppe obstacles, bonus, QTE
+        if self.dialogue_manager.is_blocking():
             self.check_dialogue_triggers()
             return
 
@@ -102,7 +105,7 @@ class GameManager:
         if self.qte_manager.active:
             self.qte_manager.handle_key_press(key)
             
-        if self.dialogue_manager.active:
+        if self.dialogue_manager.is_blocking():
             return
         if key == arcade.key.RIGHT:
             self.player.move_right()
@@ -114,8 +117,8 @@ class GameManager:
             self.handle_qte()
 
     def handle_key_release(self, key):
-        # Bloque les contrôles de déplacement si un dialogue est actif
-        if self.dialogue_manager.active:
+        # Bloque les contrôles de déplacement si un dialogue est bloquant
+        if self.dialogue_manager.is_blocking():
             return
         if key in (arcade.key.RIGHT, arcade.key.LEFT):
             self.player.stop()
@@ -131,11 +134,16 @@ class GameManager:
                 and not trigger["triggered"]
                 and not self.player.is_jumping()
             ):
-                self.player.stop()
+                blocking = trigger.get("blocking", True)
+                auto_duration = trigger.get("auto_duration")
+                if blocking:
+                    self.player.stop()
                 self.dialogue_manager.start_dialogue(
                     trigger["lines"],
                     choices=trigger.get("choices"),
-                    on_choice=trigger.get("on_choice")
+                    on_choice=trigger.get("on_choice"),
+                    blocking=blocking,
+                    auto_duration=auto_duration
                 )
                 trigger["triggered"] = True
 

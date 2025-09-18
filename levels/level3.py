@@ -27,7 +27,14 @@ class Level3(LevelBase):
 
         # Triggers de dialogue
         self.dialogue_triggers = [
-            {"x": 100, "lines": ["Niveau 2 : La pente commence !"], "triggered": False},
+            # Dialogue non bloquant : le héros pense tout haut à mi-pente, affiché 2.5s
+            {
+                "x": 100,
+                "lines": ["Ouf, ça grimpe ! Heureusement que je suis un caillou solide..."],
+                "triggered": False,
+                "blocking": False,  # <--- Dialogue non bloquant
+                "auto_duration": 2.5
+            },
             {"x": 900, "lines": ["Vous atteignez presque le sommet !"], "triggered": False}
         ]
 
