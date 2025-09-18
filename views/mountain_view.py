@@ -449,6 +449,10 @@ class MountainView(arcade.View):
             self.go_to_slope_scene()
 
     def on_key_press(self, key, modifiers):
+        # Quitter le jeu si ECHAP
+        if key == arcade.key.ESCAPE:
+            arcade.close_window()
+            return
         dm = self.game_manager.dialogue_manager
         if dm.active:
             # Navigation et validation des choix au clavier
@@ -468,7 +472,6 @@ class MountainView(arcade.View):
             if hasattr(self.level, 'handle_qte'):
                 if self.level.handle_qte(key):
                     return  # QTE réussi, ne pas traiter comme mouvement normal
-            
             # Contrôles classiques du joueur
             self.game_manager.handle_key_press(key)
 

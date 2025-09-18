@@ -50,6 +50,10 @@ class GameManager:
         self.physics_engine.update()
         self.player.update()
 
+        # Réarme le saut si le joueur est au sol (via le moteur physique)
+        if self.physics_engine.can_jump():
+            self.player.can_jump = True
+
         # Si dialogue actif, on stoppe obstacles, bonus, QTE
         if self.dialogue_manager.active:
             self.check_dialogue_triggers()

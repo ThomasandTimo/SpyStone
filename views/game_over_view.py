@@ -39,7 +39,7 @@ class GameOverView(arcade.View):
         )
 
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.ENTER:
+        if key == arcade.key.SPACE:
             # Exemple : revenir à l'intro ou relancer le jeu
             from views.intro_view import IntroView  # adapte si ton fichier est différent
             self.window.show_view(IntroView())

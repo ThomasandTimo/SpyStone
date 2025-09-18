@@ -45,6 +45,9 @@ class Player(arcade.Sprite):
         self.jump_sound = arcade.load_sound(os.path.join("assets/audio/small-rock-break.mp3"))
         self.last_roll_sound_time = 0  # Anti-spam
 
+        # Empêche le double saut
+        self.can_jump = True
+
 
     # -------------------- Déplacements --------------------
     def move_left(self):
@@ -60,8 +63,8 @@ class Player(arcade.Sprite):
 
     # -------------------- Saut --------------------
     def start_jump(self, mouse_x=None, mouse_y=None):
-        # Bloque le saut si pénalisé par un QTE
-        if self.qte_penalty:
+        # Bloque le saut si pénalisé par un QTE ou si déjà en l'air
+        if self.qte_penalty or not self.can_jump:
             return
 
         self.jump_charging = True
@@ -97,6 +100,8 @@ class Player(arcade.Sprite):
 
         self.jump_charging = False
         self.jump_press_time = None
+        # Empêche de resauter tant qu'on n'est pas retombé (sera réarmé par GameManager)
+        self.can_jump = False
 
     # -------------------- Update --------------------
     def update(self):
@@ -108,7 +113,7 @@ class Player(arcade.Sprite):
 
         # Déplacement
         self.center_x += self.change_x
-        
+
         # Son de roulement (si en mouvement)
         if abs(self.change_x) > 0.1:
             current_time = time.time()
