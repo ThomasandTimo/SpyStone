@@ -16,11 +16,6 @@ SCROLL_MARGIN = 200
 MIN_CHARGE_TIME= 0.2
 
 class MountainView(arcade.View):
-    def on_show_view(self):
-        # Si on revient du YetiView et une reprise est en attente, effectue la reprise
-        if hasattr(self, "pending_resume_after_yeti") and self.pending_resume_after_yeti:
-            self.pending_resume_after_yeti = False
-            self.resume_after_yeti()
     def __init__(self):
         super().__init__()
         self.levels = [Level0(),Level1(),Level3()]
@@ -300,6 +295,24 @@ class MountainView(arcade.View):
             # Nettoie la transition en attente
             self.level.pending_transition = None
 
+        # Transition automatique de Level0 à Level1 uniquement
+        if (
+            isinstance(self.level, Level0)
+            and self.game_manager.player.center_x > self.level.level_end_x
+            and not self.game_manager.dialogue_manager.active
+        ):
+            # Crée une nouvelle MountainView qui commence au Level1 (index 0 de la nouvelle liste)
+            new_view = MountainView()
+            new_view.levels = [Level1(), Level3()]
+            new_view.current_level_index = 0
+            new_view.level = new_view.levels[0]
+            new_view.level.setup()
+            new_view._connect_level_to_manager()
+            new_view.game_manager.setup(new_view.level)
+            new_view.camera_sprites.move_to((0, 0))
+            self.window.show_view(new_view)
+            return
+
         # Si on est sur le dernier niveau et que le joueur dépasse la fin, on lance la slope completion scene
         if (
             isinstance(self.level, Level3)
@@ -483,3 +496,10 @@ class MountainView(arcade.View):
         # Affiche la MountainView à l'écran
         if self.window:
             self.window.show_view(self)
+        
+        
+    def on_show_view(self):
+        # Si on revient du YetiView et une reprise est en attente, effectue la reprise
+        if hasattr(self, "pending_resume_after_yeti") and self.pending_resume_after_yeti:
+            self.pending_resume_after_yeti = False
+            self.resume_after_yeti()
