@@ -5,7 +5,7 @@ from config import ASSETS_PATH
 import time
 
 GRAVITY = 0.5
-PLAYER_SPEED = 20
+PLAYER_SPEED = 2
 BASIC_JUMP_SPEED = 12
 MIN_CHARGE_TIME = 0.2  # seuil pour différencier le saut basique et chargé
 
