@@ -11,8 +11,22 @@ class DeathAnimationScene(arcade.View):
         self.fade_alpha = 0
         self.fade_in_complete = False
         self.in_loop_phase = False
+
+        # Musique de game over
+        self.game_over_music = arcade.load_sound("assets/audio/game_over.mp3")
+        self.music_player = None
         
     def on_show(self):
+
+        # Arrêter la musique de fond
+        if hasattr(self.window, "soundtrack_player") and self.window.soundtrack_player:
+            self.window.soundtrack_player.pause()
+
+
+        # Jouer la musique de game over
+        self.music_player = self.game_over_music.play(volume=0.6)
+
+
         # Reset viewport to ensure proper positioning
         arcade.set_viewport(0, self.window.width, 0, self.window.height)
         
@@ -129,3 +143,7 @@ class DeathAnimationScene(arcade.View):
             level1_view = LevelGameView(Level1)
             level1_view.setup()
             self.window.show_view(level1_view)
+
+            # Arrêter la musique
+            if self.music_player:
+                self.music_player.stop()

@@ -13,8 +13,12 @@ class FinalCinematicScene(arcade.View):
         self.transition_alpha = 0
         self.loop_count = 0
         self.max_loops = 5
+
+
         
     def on_show(self):
+
+
         # Load all the final sequence frames (77 total frames)
         frame_files = []
         for i in range(1, 78):  # frames 1-77
@@ -143,4 +147,8 @@ class FinalCinematicScene(arcade.View):
                 # Return to main menu
                 from .intro_view import IntroView
                 menu_view = IntroView()
+                # Arrêter la musique
+                if self.music_player:
+                    self.music_player.stop()
+
                 self.window.show_view(menu_view)
