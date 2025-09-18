@@ -1,18 +1,17 @@
 import arcade
 
 class CrossroadsCompletionScene(arcade.View):
-    def __init__(self):
+    def __init__(self, mountain_view=None):
         super().__init__()
         self.background_texture = None
         self.explorer_texture = None
         self.stone_texture = None
-        
+        self.mountain_view = mountain_view
         # Final positions - both characters at the signs
         self.explorer_x = 750   # Explorer at signs
         self.stone_x = 720      # Stone next to explorer
         self.explorer_y = 180   # Ground level
         self.stone_y = 160      # Ground level for stone
-        
         # Animation
         self.fade_alpha = 0
         self.fade_in_complete = False
@@ -88,7 +87,12 @@ class CrossroadsCompletionScene(arcade.View):
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.SPACE:
-            # Transition to slope scene
-            from .slope_scene import SlopeScene
-            slope_scene = SlopeScene()
-            self.window.show_view(slope_scene)
+            # Retourne à MountainView juste avant le choix
+            if self.mountain_view:
+                self.window.show_view(self.mountain_view)
+                self.mountain_view.resume_after_crossroads()
+            else:
+                from .mountain_view import MountainView
+                mountain_view = MountainView()
+                mountain_view.setup()
+                self.window.show_view(mountain_view)

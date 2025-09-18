@@ -1,55 +1,52 @@
 import arcade
 
-class DeathAnimationScene(arcade.View):
+class ExplorerDeathScene(arcade.View):
     def __init__(self):
         super().__init__()
         self.scene_frames = []
         self.current_frame = 0
         self.frame_timer = 0
-        self.frame_durations = []  # Individual duration for each frame
+        self.frame_durations = []
         self.is_playing = True
         self.fade_alpha = 0
         self.fade_in_complete = False
-        self.in_loop_phase = False
         
     def on_show(self):
         # Reset viewport to ensure proper positioning
         arcade.set_viewport(0, self.window.width, 0, self.window.height)
         
-        # Load all 21 death animation frames
+        # Load all 19 explorer death animation frames
         frame_files = []
-        for i in range(1, 22):  # frames 1-21
-            frame_files.append(f"death_{i:02d}.png")
+        for i in range(1, 20):  # frames 1-19
+            frame_files.append(f"explorer_death_{i:02d}.png")
         
         # Set individual durations for each frame (all 0.2 seconds for now)
         self.frame_durations = [
-            0.2,  
-            0.2,
-            0.2, 
-            0.2, 
-            0.2, 
-            0.2,  
-            0.2, 
-            0.2, 
-            0.2,  
-            0.2,  
-            0.2, 
-            0.2,  
-            0.2,  
-            0.5, 
-            0.5,  
-            0.5,  
-            0.2,  
-            0.6,  
-            0.6,  
-            0.6,  
-            0.6 
+            0.2,  # explorer_death_01
+            0.2,  # explorer_death_02
+            0.2,  # explorer_death_03
+            0.2,  # explorer_death_04
+            0.2,  # explorer_death_05
+            0.2,  # explorer_death_06
+            0.2,  # explorer_death_07
+            0.2,  # explorer_death_08
+            0.2,  # explorer_death_09
+            0.2,  # explorer_death_10
+            0.2,  # explorer_death_11
+            0.2,  # explorer_death_12
+            0.2,  # explorer_death_13
+            0.2,  # explorer_death_14
+            0.2,  # explorer_death_15
+            0.2,  # explorer_death_16
+            0.2,  # explorer_death_17
+            0.2,  # explorer_death_18
+            0.2   # explorer_death_19
         ]
         
         # Try to load all frames
         for frame_file in frame_files:
             try:
-                texture = arcade.load_texture(f"assets/rock_death_sequence/{frame_file}")
+                texture = arcade.load_texture(f"assets/explorer_death_sequence/{frame_file}")
                 self.scene_frames.append(texture)
             except:
                 print(f"Could not load {frame_file}")
@@ -106,22 +103,30 @@ class DeathAnimationScene(arcade.View):
                     self.frame_timer = 0
                     self.current_frame += 1
                     
-                    # Check if we've reached frame 19 (next to last - index 18)
-                    if self.current_frame == 19:
-                        self.in_loop_phase = True
-                    
-                    # If in loop phase, alternate between frames 19 and 20 (last two)
-                    if self.in_loop_phase:
-                        if self.current_frame >= 21:  # After frame 20 (index 20)
-                            self.current_frame = 19  # Go back to frame 19 (index 18)
-                    
-                    # If not in loop phase and reached the end, start looping
-                    elif self.current_frame >= len(self.scene_frames):
-                        self.current_frame = 19  # Start the loop
-                        self.in_loop_phase = True
+                    # Check if sequence is complete
+                    if self.current_frame >= len(self.scene_frames):
+                        self.is_playing = False
+                        self.current_frame = len(self.scene_frames) - 1
+                        
+                        # After sequence completes, wait 2 seconds then return to menu
+                        arcade.schedule(self.return_to_menu, 2.0)
+
+    def return_to_menu(self, delta_time):
+        arcade.unschedule(self.return_to_menu)
+        from .intro_view import IntroView
+        menu_view = IntroView()
+        self.window.show_view(menu_view)
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.SPACE:
-            from views.intro_view import IntroView
-            menu_view = IntroView()
-            self.window.show_view(menu_view)
+            if self.is_playing:
+                # Skip to end of sequence
+                self.is_playing = False
+                self.current_frame = len(self.scene_frames) - 1 if self.scene_frames else 0
+                arcade.schedule(self.return_to_menu, 1.0)
+            else:
+                # Return to menu immediately
+                arcade.unschedule(self.return_to_menu)
+                from .intro_view import IntroView
+                menu_view = IntroView()
+                self.window.show_view(menu_view)

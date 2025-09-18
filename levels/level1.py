@@ -9,12 +9,7 @@ class Level1(LevelBase):
 
     def setup(self):
         super().setup()
-
-        # Exemple de view_trigger : lance la YetiView à x=2500
-        from views.yeti_view import YetiView
-        self.view_triggers = [
-            #{"id": "yeti_seq", "x": 2500, "view_class": YetiView, "triggered": False}
-        ]
+        
         # Liste de blocs à créer : (width, height, center_x, center_y, couleur)
         blocs = [
             # Sols
@@ -73,22 +68,32 @@ class Level1(LevelBase):
             bloc_droit.center_y = y
             self.platforms.append(bloc_droit)
         
-         # Triggers de dialogue
+        # Triggers de dialogue et de transition
         self.dialogue_triggers = [
             {"x": 0, "lines": ["Bienvenue sur le premier niveau !"], "triggered": False},
             {"x": 200, "lines": ["Trouves un moyen de rejoindre l'autre côté !"], "triggered": False},
+            # Nouveau trigger pour crossroads à x=3300
+            {"x": 3300, "lines": [], "triggered": False, "on_trigger": self.crossroads_transition},
             {"x": 3600, "lines": ["Deux directions s'offrent à vous...", "Laquelle cache la vérité ?"],
              "choices": ["Chemin 1 (Yéti)", "Chemin 2 (Sûr)"],
              "on_choice": self.path_choice_callback,
              "triggered": False},
+            # Nouveau trigger pour la pente après le choix safe route
+            {"x": 3700, "lines": [], "triggered": False, "on_trigger": self.slope_transition},
         ]
+
+    def slope_transition(self):
+        self.pending_transition = 'slope'
+
+    def crossroads_transition(self):
+        # Indique à MountainView de lancer la crossroads scene
+        self.pending_transition = 'crossroads'
 
     def path_choice_callback(self, idx, value):
         """Callback pour le choix de chemin"""
         import random
         #hero_choice = random.randint(0, 1)
-        hero_choice = 0
-
+        hero_choice = idx  # Utilise le choix du joueur
         player_line = ""
         if idx == hero_choice:
             player_line = "This way feels right. Let's go."

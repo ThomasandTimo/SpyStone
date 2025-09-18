@@ -143,8 +143,13 @@ class SlopeScene(arcade.View):
     def on_key_press(self, key, modifiers):
         if key == arcade.key.SPACE:
             if self.scene_complete:
-                # Transition to Level 2
-                self.start_level_2()
+                # Callback vers MountainView pour lancer Level3
+                if hasattr(self, 'mountain_view') and self.mountain_view:
+                    print("[SlopeScene] Calling mountain_view.resume_after_slope()")
+                    self.mountain_view.resume_after_slope()
+                else:
+                    print("[SlopeScene] No mountain_view set, closing window.")
+                    arcade.close_window()
             else:
                 # Skip to end of scene
                 self.stone_x = self.stone_stop_x
@@ -154,12 +159,3 @@ class SlopeScene(arcade.View):
                 self.stone_stopped = True
                 self.explorer_stopped = True
                 self.scene_complete = True
-
-    def start_level_2(self):
-        # Start Level 2
-        from .level_game_view import LevelGameView
-        from levels.level2 import Level2
-        
-        level2_view = LevelGameView(Level2)
-        level2_view.setup()
-        self.window.show_view(level2_view)

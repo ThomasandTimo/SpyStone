@@ -101,8 +101,9 @@ class Level3(LevelBase):
         #     spike.center_y = 500
         #     self.platforms.append(spike)
 
+
         # === SOL DE FIN ===
-        # Plateforme de fin avec trou
+        # Plateforme de fin avec trou (bas)
         end_platform_left = arcade.SpriteSolidColor(100, 40, arcade.color.DARK_BROWN)
         end_platform_left.center_x = 750
         end_platform_left.center_y = 20
@@ -112,6 +113,17 @@ class Level3(LevelBase):
         end_platform_right.center_x = 950
         end_platform_right.center_y = 20
         self.platforms.append(end_platform_right)
+
+        # === PLATEFORME DE FIN EN HAUT ===
+        # Ajoute une grande plateforme en haut de la pente, à la fin du niveau
+        final_platform_width = 600
+        final_platform_height = 40
+        final_platform_x = 500 + pente_length  # tout à droite du niveau
+        final_platform_y = end_y +10 # un peu au-dessus du sommet de la pente
+        final_platform = arcade.SpriteSolidColor(final_platform_width, final_platform_height, arcade.color.GOLD)
+        final_platform.center_x = final_platform_x
+        final_platform.center_y = final_platform_y
+        self.platforms.append(final_platform)
 
 
         # === SYSTÈME DE VENT ===
@@ -278,6 +290,10 @@ class Level3(LevelBase):
         for obstacle in self.obstacles[:]:
             if obstacle.center_y < -50:
                 obstacle.remove_from_sprite_lists()
+
+        # === CHECK FIN DE NIVEAU ===
+        if hasattr(self, 'game_manager') and hasattr(self.game_manager, 'player'):
+            self.check_end_trigger(self.game_manager.player)
 
     def draw_wind_effects(self, camera_x):
         """Dessine les effets visuels du vent"""
