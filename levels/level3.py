@@ -7,7 +7,7 @@ from levels.level_base import LevelBase
 class Level3(LevelBase):
     def __init__(self):
         super().__init__("Niveau 3 - La Montagne Venteuse", background_image=os.path.join("assets/background_glacial_mountains_large.png"))
-        self.level_end_x = 950
+        self.level_end_x = 1600
         
     def setup(self):
         super().setup()
