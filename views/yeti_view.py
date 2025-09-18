@@ -8,13 +8,15 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
 class YetiView(arcade.View):
-    def __init__(self):
+    def __init__(self, mountain_view=None, resume_trigger_id=None):
         super().__init__()
         self.yeti_texture = arcade.load_texture(os.path.join(ASSETS_PATH, "yeti.png"))
         self.state = "intro"  # intro -> scream -> result
         self.scream_time = None
         self.result = None
         self.camera = arcade.Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
+        self.mountain_view = mountain_view  # Pour reprendre la progression après
+        self.resume_trigger_id = resume_trigger_id
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.DARK_MIDNIGHT_BLUE)
@@ -58,7 +60,7 @@ class YetiView(arcade.View):
                 arcade.color.RED, 26
             )
         elif self.state == "result":
-            if self.result == "dead":
+            if False:
                 arcade.draw_text(
                     "The Yeti devours the Hero...",
                     text_x, text_y,
@@ -87,8 +89,13 @@ class YetiView(arcade.View):
             self.scream_time = time.time()
             self.window.dispatch_event("on_draw")
         elif self.state == "result" and self.result == "alive" and key in (arcade.key.ENTER, arcade.key.RETURN):
-            from views.mountain_view import MountainView
-            self.window.show_view(MountainView())
+            # Reprend la progression dans MountainView si fourni
+            if self.mountain_view:
+                self.window.show_view(self.mountain_view)
+                self.mountain_view.resume_after_view(trigger_id=self.resume_trigger_id)
+            else:
+                from views.mountain_view import MountainView
+                self.window.show_view(MountainView())
 
     def on_update(self, delta_time):
         if self.state == "scream" and self.scream_time is not None:

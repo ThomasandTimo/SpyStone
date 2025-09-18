@@ -9,7 +9,12 @@ class Level1(LevelBase):
 
     def setup(self):
         super().setup()
-        
+
+        # Exemple de view_trigger : lance la YetiView à x=2500
+        from views.yeti_view import YetiView
+        self.view_triggers = [
+            #{"id": "yeti_seq", "x": 2500, "view_class": YetiView, "triggered": False}
+        ]
         # Liste de blocs à créer : (width, height, center_x, center_y, couleur)
         blocs = [
             # Sols
@@ -81,8 +86,9 @@ class Level1(LevelBase):
     def path_choice_callback(self, idx, value):
         """Callback pour le choix de chemin"""
         import random
-        hero_choice = random.randint(0, 1)
-        
+        #hero_choice = random.randint(0, 1)
+        hero_choice = 0
+
         player_line = ""
         if idx == hero_choice:
             player_line = "This way feels right. Let's go."

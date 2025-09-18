@@ -16,9 +16,10 @@ SCROLL_MARGIN = 200
 MIN_CHARGE_TIME= 0.2
 
 class MountainView(arcade.View):
+
     def __init__(self):
         super().__init__()
-        self.levels = [Level0(), Level1(), Level2(),Level3()]
+        self.levels = [Level1(), Level2(),Level3()]
         self.current_level_index = 0
         self.level = self.levels[self.current_level_index]
         self.level.setup()
@@ -266,6 +267,10 @@ class MountainView(arcade.View):
         self.window.show_view(GameOverView())
         
     def on_update(self, delta_time):
+        # Gestion générique des view_triggers (prioritaire)
+        if self._check_view_triggers():
+            return
+
         self.game_manager.update()
         self.scroll_to_player()
 
@@ -345,7 +350,20 @@ class MountainView(arcade.View):
 
     def go_to_yeti_scene(self):
         from views.yeti_view import YetiView
-        self.window.show_view(YetiView())
+        # Passe une référence à MountainView pour pouvoir reprendre après la YetiView
+        yeti_view = YetiView(mountain_view=self)
+        self.window.show_view(yeti_view)
+
+    def resume_after_view(self, trigger_id=None):
+        """Reprend la progression après une view externe (ex: YetiView)."""
+        # Par défaut, reprend au niveau courant, mais on peut customiser selon trigger_id
+        self.game_manager.is_game_over = False
+        if hasattr(self.game_manager.player, 'reset_position'):
+            self.game_manager.player.reset_position(x=100, y=400)
+        # Si besoin, on peut utiliser trigger_id pour des comportements avancés
+        # (ex: placer le joueur à une position précise, changer de niveau, etc.)
+        # Redessine la caméra
+        self.camera_sprites.move_to((0, 0))
 
     def on_key_press(self, key, modifiers):
         dm = self.game_manager.dialogue_manager
@@ -373,3 +391,20 @@ class MountainView(arcade.View):
 
     def on_key_release(self, key, modifiers):
         self.game_manager.handle_key_release(key)
+
+    def _check_view_triggers(self):
+        """Détecte et lance les view_triggers du niveau courant."""
+        if hasattr(self.level, 'view_triggers'):
+            for trigger in self.level.view_triggers:
+                if (self.game_manager.player.center_x >= trigger["x"]
+                    and not trigger.get("triggered", False)):
+                    # Marque comme déclenché
+                    trigger["triggered"] = True
+                    # Instancie dynamiquement la view
+                    view_class = trigger["view_class"]
+                    # Passe la référence à MountainView et l'ID du trigger pour la reprise
+                    view_instance = view_class(mountain_view=self, resume_trigger_id=trigger.get("id"))
+                    self.window.show_view(view_instance)
+                    # On stoppe la progression ici (on_update ne doit pas continuer)
+                    return True
+        return False

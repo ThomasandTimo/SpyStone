@@ -128,8 +128,8 @@ class Player(arcade.Sprite):
         :param x: coordonnée X de départ
         :param y: coordonnée Y de départ
         """
-        self.center_x = 0
-        self.center_y = 0
+        self.center_x = x
+        self.center_y = y
         self.change_x = 0
         self.change_y = 0
         self.angle = 0
