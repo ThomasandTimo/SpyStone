@@ -1,38 +1,38 @@
 import arcade
 
-class CrossroadsCompletionScene(arcade.View):
+class SlopeCompletionScene(arcade.View):
     def __init__(self):
         super().__init__()
         self.background_texture = None
         self.explorer_texture = None
         self.stone_texture = None
         
-        # Final positions - both characters at the signs
-        self.explorer_x = 750   # Explorer at signs
-        self.stone_x = 720      # Stone next to explorer
-        self.explorer_y = 180   # Ground level
-        self.stone_y = 160      # Ground level for stone
+        # Final positions - both characters at the top of slope
+        self.explorer_x = 600   # Explorer at top of slope
+        self.stone_x = 550      # Stone next to explorer
+        self.explorer_y = 200   # Updated to match new explorer height
+        self.stone_y = 190      # Ground level at top for stone
         
         # Animation
         self.fade_alpha = 0
         self.fade_in_complete = False
         
     def on_show(self):
+        # Reset viewport to ensure proper positioning
+        arcade.set_viewport(0, self.window.width, 0, self.window.height)
+        
         try:
-            # Same background as crossroads scene
-            self.background_texture = arcade.load_texture("assets/emptyM.png")
+            # Same background as slope scene
+            self.background_texture = arcade.load_texture("assets/pente_scene.png")
             self.explorer_texture = arcade.load_texture("assets/explorer.png")
             self.stone_texture = arcade.load_texture("assets/stone.png")
         except:
-            arcade.set_background_color(arcade.color.SKY_BLUE)
-        
-        # Reset any camera/viewport positioning that might carry over from game
-        arcade.set_viewport(0, self.window.width, 0, self.window.height)
+            arcade.set_background_color(arcade.color.GRAY)
 
     def on_draw(self):
         self.clear()
         
-        # Draw static background with mountain and signs
+        # Draw static background with slope
         if self.background_texture:
             arcade.draw_scaled_texture_rectangle(
                 center_x=self.window.width // 2,
@@ -42,7 +42,7 @@ class CrossroadsCompletionScene(arcade.View):
                          self.window.height / self.background_texture.height)
             )
         
-        # Draw explorer (still at signs)
+        # Draw explorer (at top of slope)
         if self.explorer_texture:
             arcade.draw_texture_rectangle(
                 center_x=self.explorer_x,
@@ -52,7 +52,7 @@ class CrossroadsCompletionScene(arcade.View):
                 texture=self.explorer_texture
             )
         
-        # Draw stone (now next to explorer)
+        # Draw stone (now next to explorer at top)
         if self.stone_texture:
             arcade.draw_texture_rectangle(
                 center_x=self.stone_x,
@@ -71,8 +71,16 @@ class CrossroadsCompletionScene(arcade.View):
                 fade_overlay
             )
         
+        # Success message
         arcade.draw_text(
-            "ESPACE - Continuer l'aventure",
+            "Le caillou a gravi la pente !",
+            self.window.width // 2, self.window.height - 100,
+            arcade.color.YELLOW, 24,
+            anchor_x="center"
+        )
+        
+        arcade.draw_text(
+            "ESPACE - Voir la fin de l'aventure",
             self.window.width // 2, 80,
             arcade.color.WHITE, 16,
             anchor_x="center"
@@ -88,7 +96,7 @@ class CrossroadsCompletionScene(arcade.View):
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.SPACE:
-            # Transition to slope scene
-            from .slope_scene import SlopeScene
-            slope_scene = SlopeScene()
-            self.window.show_view(slope_scene)
+            # Transition to final cinematic sequence
+            from .final_cinematic_scene import FinalCinematicScene
+            final_scene = FinalCinematicScene()
+            self.window.show_view(final_scene)

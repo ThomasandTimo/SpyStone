@@ -149,7 +149,20 @@ class LevelGameView(arcade.View):
         self.window.show_view(death_scene)
     
     def complete_level(self):
-        # Return to crossroads scene with both characters together
-        from .crossroads_completion_scene import CrossroadsCompletionScene
-        completion_scene = CrossroadsCompletionScene()
-        self.window.show_view(completion_scene)
+        # Check which level was completed
+        if isinstance(self.level, type(self.level)) and hasattr(self.level, 'name'):
+            if "Niveau 1" in self.level.name:
+                # Return to crossroads completion scene
+                from .crossroads_completion_scene import CrossroadsCompletionScene
+                completion_scene = CrossroadsCompletionScene()
+                self.window.show_view(completion_scene)
+            elif "Niveau 2" in self.level.name:
+                # Go to slope completion scene
+                from .slope_completion_scene import SlopeCompletionScene
+                slope_completion = SlopeCompletionScene()
+                self.window.show_view(slope_completion)
+        else:
+            # Default to crossroads completion for Level 1
+            from .crossroads_completion_scene import CrossroadsCompletionScene
+            completion_scene = CrossroadsCompletionScene()
+            self.window.show_view(completion_scene)
