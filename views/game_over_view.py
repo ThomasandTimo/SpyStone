@@ -8,13 +8,18 @@ class GameOverView(arcade.View):
 
     def __init__(self, score=0):
         super().__init__()
+        self.camera = arcade.Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
 
     def on_show(self):
         """Configure la fenêtre quand la view est affichée"""
         arcade.set_background_color(arcade.color.BLACK)
+        if hasattr(self, 'camera'):
+            self.camera.move_to((0, 0))
 
     def on_draw(self):
         arcade.start_render()
+        if hasattr(self, 'camera'):
+            self.camera.use()
         # Fond noir
         arcade.draw_rectangle_filled(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
                                      SCREEN_WIDTH, SCREEN_HEIGHT, arcade.color.BLACK)
@@ -28,7 +33,7 @@ class GameOverView(arcade.View):
 
         # Instruction pour retourner à l'intro ou rejouer
         arcade.draw_text(
-            "Appuyez sur ESPACE pour recommencer",
+            "Press SPACE to restart",
             SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 80,
             arcade.color.LIGHT_GRAY, 24, anchor_x="center"
         )

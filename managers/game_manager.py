@@ -41,8 +41,9 @@ class GameManager:
         self.physics_engine = arcade.PhysicsEnginePlatformer(
             self.player, self.platform_list, gravity_constant=0.5
         )
+        self.player.reset_position
         self.player.center_x = 100
-        self.player.center_y = 60
+        self.player.center_y = 400
 
     def update(self):
         # --- Met à jour physique
@@ -71,7 +72,8 @@ class GameManager:
         # --- Trous
         for hole in self.holes:
             if hole.check_fall(self.player):
-                self.reset_player()
+                # Ne reset plus ici, laisse MountainView gérer la mort
+                pass
 
         # --- QTE simple
         if self.level and hasattr(self.level, "qte_triggers"):
@@ -132,10 +134,13 @@ class GameManager:
                 and not self.player.is_jumping()
             ):
                 self.player.stop()
-                self.dialogue_manager.start_dialogue(
-                    trigger["lines"],
-                    choices=trigger.get("choices"),
-                    on_choice=trigger.get("on_choice")
-                )
+                if "on_trigger" in trigger and callable(trigger["on_trigger"]):
+                    trigger["on_trigger"]()
+                elif trigger.get("lines") or trigger.get("choices"):
+                    self.dialogue_manager.start_dialogue(
+                        trigger["lines"],
+                        choices=trigger.get("choices"),
+                        on_choice=trigger.get("on_choice")
+                    )
                 trigger["triggered"] = True
 

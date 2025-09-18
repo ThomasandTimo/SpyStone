@@ -1,5 +1,7 @@
 import arcade
 
+from views.crossroads_completion_scene import CrossroadsCompletionScene
+
 class CinematicSequenceView(arcade.View):
     def __init__(self):
         super().__init__()
@@ -101,14 +103,14 @@ class CinematicSequenceView(arcade.View):
         # Show instructions
         if self.is_playing:
             arcade.draw_text(
-                "ESPACE - Passer la cinématique",
+                "SPACE - Skip the cutscene",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 14,
                 anchor_x="center"
             )
         else:
             arcade.draw_text(
-                "ESPACE - Continuer",
+                "SPACE - Continue",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 16,
                 anchor_x="center"
@@ -157,6 +159,6 @@ class CinematicSequenceView(arcade.View):
                 self.current_frame = len(self.scene_frames) - 1 if self.scene_frames else 0
             else:
                 # Continue to scrolling scene
-                from .intro_scene_view import IntroSceneView
-                scrolling_view = IntroSceneView()
+                from .crossroads_scene import CrossroadsScene
+                scrolling_view = CrossroadsScene()
                 self.window.show_view(scrolling_view)

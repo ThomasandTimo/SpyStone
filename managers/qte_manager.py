@@ -59,7 +59,7 @@ class QTEManager:
 
             # Texte 1 : en haut
             arcade.draw_text(
-                "Vous êtes coincés !!!",
+                "You are stuck !!!",
                 screen_center_x, 470,  # Position Y haute
                 arcade.color.BLUE, 25,
                 anchor_x="center"
@@ -67,7 +67,7 @@ class QTEManager:
 
             # Texte 2 : en dessous
             arcade.draw_text(
-                "Appuie sur E !",
+                "Press E!",
                 screen_center_x, 430,
                 arcade.color.BLUE, 25,
                 anchor_x="center",
