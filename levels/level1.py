@@ -35,10 +35,7 @@ class Level1(LevelBase):
             (1200, 400, 2000, 600, arcade.color.BLACK),
             
             # Gros blocs droits
-            (60, 620, 2850, 220, arcade.color.BLACK),
-
-            # Gros blocs droits
-            (60, 100, 3350, 100, arcade.color.BLACK),
+            (60, 620, 2850, 220, arcade.color.BLACK)
         ]
         
         # Création des sprites pour les blocs normaux

@@ -18,7 +18,7 @@ MIN_CHARGE_TIME= 0.2
 class MountainView(arcade.View):
     def __init__(self):
         super().__init__()
-        self.levels = [Level0(),Level1(),Level3()]
+        self.levels = [Level0(), Level1(),Level3()]
         self.current_level_index = 0
         self.level = self.levels[self.current_level_index]
         self.level.setup()

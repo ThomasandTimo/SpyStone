@@ -61,7 +61,7 @@ class LevelGameView(arcade.View):
         # Show win condition
         if self.player.center_x > 900:  # Near end of level
             arcade.draw_text(
-                "ESPACE - Terminer le niveau",
+                "SPACE - Finish the level",
                 self.camera_sprites.position[0] + SCREEN_WIDTH//2,
                 SCREEN_HEIGHT//2,
                 arcade.color.YELLOW, 

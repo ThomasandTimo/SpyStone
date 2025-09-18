@@ -88,14 +88,14 @@ class SlopeScene(arcade.View):
         # Show instructions based on scene state
         if not self.scene_complete:
             arcade.draw_text(
-                "L'explorateur gravit la pente...",
+                "The explorer climbs the slope...",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 14,
                 anchor_x="center"
             )
         else:
             arcade.draw_text(
-                "ESPACE - Commencer le niveau 2",
+                "SPACE - Start Level 2",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 16,
                 anchor_x="center"

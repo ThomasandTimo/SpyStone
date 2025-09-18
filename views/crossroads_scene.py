@@ -90,14 +90,14 @@ class CrossroadsScene(arcade.View):
         # Show instructions based on scene state
         if not self.scene_complete:
             arcade.draw_text(
-                "L'explorateur s'approche des panneaux...",
+                "The explorer approaches the signs...",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 14,
                 anchor_x="center"
             )
         else:
             arcade.draw_text(
-                "ESPACE - Commencer le défi",
+                "SPACE - Start the challenge",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 16,
                 anchor_x="center"
