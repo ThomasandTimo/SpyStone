@@ -5,25 +5,25 @@ from levels.level_base import LevelBase
 
 class Level0(LevelBase):
     def __init__(self):
-        super().__init__("Niveau 1", background_color=arcade.color.SKY_BLUE, background_image=os.path.join(ASSETS_PATH, "backgrounds", "background_glacial_mountains1.png"))
+        super().__init__("Niveau 0", background_image=os.path.join("assets/background_glacial_mountains_large.png"))
         self.level_end_x = 1500
     def setup(self):
         super().setup()
         
         # --- Sol ---
-        sol = arcade.SpriteSolidColor(2300, 40, arcade.color.DARK_BROWN)
+        sol = arcade.SpriteSolidColor(2300, 40, arcade.color.DARK_SLATE_GRAY)
         sol.center_x = 800
         sol.center_y = 20
         self.platforms.append(sol)
         
         # --- Sol ---
-        sol = arcade.SpriteSolidColor(200, 200, arcade.color.DARK_BROWN)
+        sol = arcade.SpriteSolidColor(200, 200, arcade.color.DARK_SLATE_GRAY)
         sol.center_x = 600
         sol.center_y = 20
         self.platforms.append(sol)
         
         # --- Sol ---
-        sol = arcade.SpriteSolidColor(80, 650, arcade.color.DARK_BROWN)
+        sol = arcade.SpriteSolidColor(80, 650, arcade.color.DARK_SLATE_GRAY)
         sol.center_x = 1000
         sol.center_y = 20
         self.platforms.append(sol)

@@ -20,25 +20,11 @@ class GameManager:
         self.physics_engine = None
         self.is_game_over = False
         self.dialogue_manager = DialogueManager()
-        self.dialogue_triggers = [
-            {"x": 500, "lines": ["Le héros commence son ascension.", "Vous observez attentivement."], "triggered": False},
-            {"x": 1200, "lines": ["Un oiseau vous bloque la route. Que fais-tu ?"],
-             "choices": ["Lui parler gentiment", "Lancer un caillou", "Contourner discrètement"],
-             "on_choice": self.oiseau_callback,
-             "triggered": False}
-        ]
+        # Fournit une référence au game manager pour les callbacks de dialogue
+        self.dialogue_manager.game_manager = self
+        self.dialogue_triggers = []
         self.level = None
 
-    def oiseau_callback(self, idx, value):
-        # Exemple de callback pour le choix de l'oiseau
-        if idx == 0:
-            self.dialogue_manager.start_dialogue(["L'oiseau te répond poliment."])
-        elif idx == 1:
-            self.dialogue_manager.start_dialogue(["L'oiseau s'envole, vexé !"])
-        elif idx == 2:
-            self.dialogue_manager.start_dialogue(["Tu passes discrètement, l'oiseau ne te voit pas."])
-
-        
     def setup(self, level=None):
         # Synchronise le niveau courant
         

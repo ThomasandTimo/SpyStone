@@ -1,9 +1,10 @@
+import math
 import arcade
 import os 
 from config import ASSETS_PATH
 
 class LevelBase:
-    def __init__(self, name, background_color=arcade.color.SKY_BLUE, background_image=None, background_zoom=1.0, dialogue_box_image=os.path.join(ASSETS_PATH, "ui", "box1.png"), dialogue_character_fullbody_image=None, dialogue_character_head_image=None):
+    def __init__(self, name, background_color=arcade.color.SKY_BLUE, background_image="assets/background_glacial_mountains.png", background_zoom=1.0, dialogue_box_image=os.path.join(ASSETS_PATH, "ui", "box1_scaled.png"), dialogue_character_fullbody_image=None, dialogue_character_head_image=None):
         if dialogue_character_fullbody_image is None:
             dialogue_character_fullbody_image = os.path.join(ASSETS_PATH, "characters", "hero_fullbody.png")
         if dialogue_character_head_image is None:
@@ -47,16 +48,24 @@ class LevelBase:
 
     def draw_background(self):
         if self.background_texture:
-            # Récupère la taille de la fenêtre
             left, right, bottom, top = arcade.get_viewport()
             width = right - left
             height = top - bottom
+
             tex_w = self.background_texture.width * self.background_zoom
-            tex_h = self.background_texture.height * self.background_zoom
-            # Commence à -tex_w pour éviter le vide à gauche
-            x = -tex_w
-            while x < width:
-                arcade.draw_lrwh_rectangle_textured(x, 0, tex_w, tex_h, self.background_texture)
+            tex_h = height  # étirement vertical pour couvrir
+
+            # Calcule un offset horizontal pour compenser la position flottante
+            offset_x = left % tex_w
+            x_start = left - offset_x
+
+            x = x_start - 150
+            while x < right + tex_w:
+                arcade.draw_lrwh_rectangle_textured(
+                    x, bottom,
+                    tex_w, tex_h,
+                    self.background_texture
+                )
                 x += tex_w
         else:
             arcade.set_background_color(self.background_color)
