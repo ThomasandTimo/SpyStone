@@ -14,7 +14,7 @@ class CrossroadsScene(arcade.View):
         self.stone_y = 160      # Ground level for stone
         
         # Target positions
-        self.stone_stop_x = 100    # Stone stops early
+        self.stone_stop_x = 60    # Stone stops early
         self.explorer_stop_x = 750  # Explorer stops at signs
         
         # Movement speeds

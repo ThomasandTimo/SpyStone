@@ -1,6 +1,6 @@
 import arcade
 
-class CinematicSequenceView(arcade.View):
+class FinalCinematicScene(arcade.View):
     def __init__(self):
         super().__init__()
         self.scene_frames = []
@@ -11,42 +11,22 @@ class CinematicSequenceView(arcade.View):
         self.fade_alpha = 0
         self.fade_in_complete = False
         self.transition_alpha = 0
-
-    def on_show(self):
-        # Load all the sequence frames
-        frame_files = [
-            "scene_01.png", "scene_02.png", "scene_03.png", "scene_04.png",
-            "scene_05.png", "scene_06.png", "scene_07.png", "scene_08.png", 
-            "scene_09.png", "scene_10.png", "scene_11.png", "scene_12.png",
-            "scene_13.png", "scene_14.png", "scene_15.png", "scene_16.png",
-            "scene_17.png"
-        ]
+        self.loop_count = 0
+        self.max_loops = 5
         
-        # Set different durations for each frame (in seconds)
-        self.frame_durations = [
-            0.1,  # scene_01 - establishing shot
-            0.1,  # scene_02 - quick transition
-            0.1,  # scene_03 - medium pause
-            0.1,  # scene_04 - quick
-            0.1,  # scene_05 - explorer appears, longer pause
-            0.1,  # scene_06 - medium
-            0.1,  # scene_07 - medium
-            0.1,  # scene_08 - stone appears, longer pause
-            0.1,  # scene_09 - medium
-            0.1,  # scene_10 - medium
-            0.1,  # scene_11 - medium
-            0.1,  # scene_12 - medium
-            2.1,  # scene_13 - medium
-            0.1,  # scene_14 - final mountain view
-            0.1,  # scene_15 - close up, longer pause
-            1.6,  # scene_16 - stone detail
-            0.1   # scene_17 - final frame, longest pause
-        ]
+    def on_show(self):
+        # Load all the final sequence frames (77 total frames)
+        frame_files = []
+        for i in range(1, 78):  # frames 1-77
+            frame_files.append(f"final_{i:02d}.png")
+        
+        # Set durations - 0.1 second for each frame as requested
+        self.frame_durations = [0.1] * 77  # All frames get 0.1 second timing
         
         # Try to load all frames
         for frame_file in frame_files:
             try:
-                texture = arcade.load_texture(f"assets/sequence/{frame_file}")
+                texture = arcade.load_texture(f"assets/final_sequence/{frame_file}")
                 self.scene_frames.append(texture)
             except:
                 print(f"Could not load {frame_file}")
@@ -54,7 +34,7 @@ class CinematicSequenceView(arcade.View):
         
         if not self.scene_frames:
             # Fallback if no images load
-            arcade.set_background_color(arcade.color.SKY_BLUE)
+            arcade.set_background_color(arcade.color.DARK_BLUE)
 
     def on_draw(self):
         self.clear()
@@ -100,14 +80,21 @@ class CinematicSequenceView(arcade.View):
         # Show instructions
         if self.is_playing:
             arcade.draw_text(
-                "ESPACE - Passer la cinématique",
+                "ESPACE - Passer la séquence finale",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 14,
                 anchor_x="center"
             )
         else:
+            # End of sequence
             arcade.draw_text(
-                "ESPACE - Continuer",
+                "Fin de l'aventure",
+                self.window.width // 2, self.window.height // 2 + 100,
+                arcade.color.YELLOW, 32,
+                anchor_x="center"
+            )
+            arcade.draw_text(
+                "ESPACE - Retour au menu",
                 self.window.width // 2, 50,
                 arcade.color.WHITE, 16,
                 anchor_x="center"
@@ -121,7 +108,7 @@ class CinematicSequenceView(arcade.View):
                 self.fade_alpha = 255
                 self.fade_in_complete = True
         
-        # Frame animation with variable timing and smooth transitions
+        # Frame animation with smooth transitions
         if self.is_playing and self.fade_in_complete:
             if self.current_frame < len(self.frame_durations):
                 current_duration = self.frame_durations[self.current_frame]
@@ -143,8 +130,13 @@ class CinematicSequenceView(arcade.View):
                     self.current_frame += 1
                     self.transition_alpha = 0
                     
+                    # Special handling for the first 8 frames (loop 3 times)
+                    if self.current_frame == 7 and self.loop_count < self.max_loops:
+                        self.loop_count += 1
+                        self.current_frame = 0  # Reset to first frame
+                    
                     # Check if sequence is complete
-                    if self.current_frame >= len(self.scene_frames):
+                    elif self.current_frame >= len(self.scene_frames):
                         self.is_playing = False
                         self.current_frame = len(self.scene_frames) - 1
 
@@ -155,7 +147,7 @@ class CinematicSequenceView(arcade.View):
                 self.is_playing = False
                 self.current_frame = len(self.scene_frames) - 1 if self.scene_frames else 0
             else:
-                # Continue to crossroads scene
-                from .crossroads_scene import CrossroadsScene
-                crossroads_view = CrossroadsScene()
-                self.window.show_view(crossroads_view)
+                # Return to main menu
+                from .intro_view import IntroView
+                menu_view = IntroView()
+                self.window.show_view(menu_view)

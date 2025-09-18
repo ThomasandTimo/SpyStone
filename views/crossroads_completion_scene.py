@@ -25,6 +25,9 @@ class CrossroadsCompletionScene(arcade.View):
             self.stone_texture = arcade.load_texture("assets/stone.png")
         except:
             arcade.set_background_color(arcade.color.SKY_BLUE)
+        
+        # Reset any camera/viewport positioning that might carry over from game
+        arcade.set_viewport(0, self.window.width, 0, self.window.height)
 
     def on_draw(self):
         self.clear()
@@ -93,8 +96,7 @@ class CrossroadsCompletionScene(arcade.View):
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.SPACE:
-            # For now, you can add what happens next
-            # Maybe return to main menu or continue to next part of story
-            from .intro_view import IntroView
-            menu_view = IntroView()
-            self.window.show_view(menu_view)
+            # Transition to final cinematic sequence
+            from .final_cinematic_scene import FinalCinematicScene
+            final_scene = FinalCinematicScene()
+            self.window.show_view(final_scene)
